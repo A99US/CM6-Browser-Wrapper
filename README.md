@@ -11,7 +11,7 @@ This is a CodeMirror 6 Wrapper for browser so you don't need to rollup a new one
 
 ## Demo
 
-**[Demo On GitHub Page](index.php)**
+**[Demo On GitHub Page](https://a99us.github.io/CM6-Browser-Wrapper/)**
 
 You can try different setting by editing the **EditorSetting** JSON data in the editor and then click **Refresh Editor** or **Refresh State**. Clicking the **Reset Editor** button will reset editor with original setting.
 
@@ -28,12 +28,10 @@ Add the CodeMirror 6 wrapper file. You can use the following URL, or you can rol
 
 ```html
 <!--
-JSDelivr
-https://cdn.jsdelivr.net/gh/A99US/tempfile@1.0/editor.bundle.js
-CloudFlare Page
-https://tempfile.pages.dev/editor.bundle.js
+GitHub Page : 687KB
+https://a99us.github.io/CM6-Browser-Wrapper/cm6-browser-wrapper.min.js
 -->
-<script type="text/javascript" src="https://tempfile.pages.dev/editor.bundle.js"></script>
+<script type="text/javascript" src="https://a99us.github.io/CM6-Browser-Wrapper/cm6-browser-wrapper.min.js"></script>
 ```
 
 Let say you want to add CodeMirror into an element of **#editordiv**. You should create global var **EditorSetting['editordiv']**. Key of the array is the name of parent element / ParentName, in this case it is **editordiv**. If variable doesn't exist, wrapper will use default setting.
