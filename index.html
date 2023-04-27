@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMirror 6 Browser Wrapper</title>
+</head>
+
+<body>
+    <input type='button' id='reset' value='Reset Editor' onClick="neweditor(true)">&nbsp;&nbsp;
+    <input type='button' value='Refresh Editor' onClick="neweditor()">&nbsp;&nbsp;
+    <input type='button' value='Refresh State' onClick="newstate()">&nbsp;&nbsp;
+    <input type='button' value='Show Setting' onClick="showdoc('setting')">&nbsp;&nbsp;
+    <input type='button' value='Show Sample Code' onClick="showdoc('data')">
+    <br><br>
+    <div id="editor"></div>
+    <br>
+    <div id="editorbutton"></div>
+</body>
+<script src="asset/jquery-3.4.1.min.js"></script>
+<script src="asset/ismobile.js"></script>
+<script type="text/javascript" src="./asset/doccode.js"></script>
+<script type="text/javascript">
+var EditorPrefix = 'CodeMirror6',
+    EditorSetting = {},
+    DefaultSetting = {
+        data: "",
+        updatelistener: 300,
+        historydelay: 10,
+        lang: 'json',
+        snippets: ['html', 'javascript'],
+        theme: 'DefaultTheme',
+        indentunit: 2,
+        linewrap: 1,
+        lineNumbers: 1,
+        readonly: 0,
+        keymap: ['indentWithTab', 'searchKeymap', 'completionKeymap'],
+        control: {
+            panel: 1,
+            panelitem: ['history', 'indent', 'selectall', 'lang', 'theme'],
+            prepend: 1,
+            prependitem: ['history', 'linewrap', 'readonly', 'lang', 'theme'],
+            append: 0,
+            appenditem: ['history', 'linewrap', 'search'],
+            element: 'editorbutton',
+            elementitem: ['lang', 'theme'],
+        },
+        css: {
+            '&.cm-editor': {
+                outline: '1px solid cyan',
+                height: '515px', // 500 525
+                // width: '990px',
+                fontSize: (ismobile ? '13px' : '19px')
+            }
+        }
+    };
+
+function btncommand(command) {
+    $("#" + EditorPrefix + '-command').val(command + '-editor').click();
+}
+
+function neweditor(reset = false) {
+    // Reset True = Reset editor with Default Setting
+    setsetting(reset);
+    btncommand('neweditor');
+}
+
+function newstate() {
+    setsetting();
+    btncommand('newstate');
+};
+
+function showdoc(opt) {
+    EditorSetting['editor']['lang'] = (opt == 'setting') ?
+        'json' : 'php';
+    window[EditorSetting['editor']['data']] = (opt == 'setting') ?
+        stringee(EditorSetting['editor']) :
+        testdoccode;
+    $("#" + EditorPrefix + "-setlang-editor").val(EditorSetting['editor']['lang']);
+    btncommand('newstate');
+}
+
+function setsetting(reset = false) {
+    // Setting Init / Reset
+    if (reset) {
+        // Cannot copy array directly
+        // Has to use JSON Parse
+        EditorSetting['editor'] = JSON.parse(JSON.stringify(DefaultSetting));
+        EditorSetting['editor']['data'] = 'editordata';
+        window[EditorSetting['editor']['data']] = stringee(EditorSetting['editor']);
+    }
+    // If Editor Doc is setting
+    else if (validjson(window[EditorSetting['editor']['data']])) {
+        EditorSetting['editor'] = JSON.parse(window[EditorSetting['editor']['data']]);
+        EditorSetting['editor']['data'] = 'editordata';
+        EditorSetting['editor']['updatelistener'] = 300;
+    }
+    // If Editor Doc is not setting JSON
+    // Just in case updatelistener is not true
+    else {
+        btncommand('savedoc');
+    }
+    // console.log(reset , "\n", "Default : " , DefaultSetting, "\n", "EditorSetting" , EditorSetting['editor']);
+}
+
+function stringee(string) {
+    return JSON.stringify(string, null, 4);
+}
+
+function validjson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+$(document).ready(function() {
+    // Editor init
+    $("#reset").click();
+});
+</script>
+<script src="cm6-browser-wrapper.min.js"></script>
+<script type="text/javascript">
+// Updating doc when setlang / settheme changed
+$(document).on('change', '[id^="' + EditorPrefix + '-set"]', function() {
+    updatedoc()
+});
+// Updating doc when linewrap / readonly clicked
+$(document).on('click', '[id^="' + EditorPrefix + '-linewrap"] , [id^="' + EditorPrefix + '-readonly"]', function() {
+    updatedoc()
+});
+function updatedoc(){
+    if (validjson(window[EditorSetting['editor']['data']])) {
+        window[EditorSetting['editor']['data']] = stringee(EditorSetting['editor']);
+        btncommand('updatedoc');
+    }
+}
+</script>
+</html>
