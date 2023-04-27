@@ -24,12 +24,14 @@ You need to include JQuery file because it needs JQuery to function. Use bellow 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 ```
 
-Add the CodeMirror 6 wrapper file. You can use the following URL, or you can rollup your own file from **editor.js** from this repository.
+Add the CodeMirror 6 wrapper file. You can use the following URL (**687KB**), or you can rollup your own file from **editor.js** from this repository.
 
 ```html
 <!--
-GitHub Page : 687KB
+GitHub Page
 https://a99us.github.io/CM6-Browser-Wrapper/cm6-browser-wrapper.min.js
+JSDelivr CDN
+https://cdn.jsdelivr.net/gh/A99US/CM6-Browser-Wrapper/cm6-browser-wrapper.min.js
 -->
 <script type="text/javascript" src="https://a99us.github.io/CM6-Browser-Wrapper/cm6-browser-wrapper.min.js"></script>
 ```
