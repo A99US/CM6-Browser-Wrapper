@@ -21,7 +21,8 @@ import { autocompletion, CompletionContext, startCompletion, currentCompletions,
 // import { linter, lintGutter, lintKeymap, openLintPanel } from '@codemirror/lint' // Diagnostic
 // import Linter from "eslint4b-prebuilt"
 
-import snippetmaker from './snippet.js'
+// import snippetmaker from './snippet.js'
+import snippetmaker from 'codemirror-6-snippetbuilder'
 import snippet_php_h4kst3r from './asset/snippet_php_h4kst3r.ts'
 import snippet_html_abusaidm from './asset/snippet_html_abusaidm.ts'
 import snippet_jquery_DonJayamanne from './asset/snippet_jquery_DonJayamanne.ts'

@@ -1,7 +1,5 @@
 /*
-
 https://github.com/A99US/CM6-Browser-Wrapper
-
 */
 (function () {
    'use strict';
@@ -22937,7 +22935,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return node;
        }
    }
-   function variableNames(doc, node) {
+   function variableNames(doc, node, isVariable) {
        if (node.to - node.from > 4096) {
            let known = VariablesByNode.get(node);
            if (known)
@@ -22945,7 +22943,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let result = [], seen = new Set, cursor = node.cursor(IterMode.IncludeAnonymous);
            if (cursor.firstChild())
                do {
-                   for (let option of variableNames(doc, cursor.node))
+                   for (let option of variableNames(doc, cursor.node, isVariable))
                        if (!seen.has(option.label)) {
                            seen.add(option.label);
                            result.push(option);
@@ -22958,7 +22956,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let result = [], seen = new Set;
            node.cursor().iterate(node => {
                var _a;
-               if (node.name == "VariableName" && node.matchContext(declSelector) && ((_a = node.node.nextSibling) === null || _a === void 0 ? void 0 : _a.name) == ":") {
+               if (isVariable(node) && node.matchContext(declSelector) && ((_a = node.node.nextSibling) === null || _a === void 0 ? void 0 : _a.name) == ":") {
                    let name = doc.sliceString(node.from, node.to);
                    if (!seen.has(name)) {
                        seen.add(name);
@@ -22970,9 +22968,12 @@ https://github.com/A99US/CM6-Browser-Wrapper
        }
    }
    /**
-   CSS property, variable, and value keyword completion source.
+   Create a completion source for a CSS dialect, providing a
+   predicate for determining what kind of syntax node can act as a
+   completable variable. This is used by language modes like Sass and
+   Less to reuse this package's completion logic.
    */
-   const cssCompletionSource = context => {
+   const defineCSSCompletionSource = (isVariable) => context => {
        let { state, pos } = context, node = syntaxTree(state).resolveInner(pos, -1);
        let isDash = node.type.isError && node.from == node.to - 1 && state.doc.sliceString(node.from, node.to) == "-";
        if (node.name == "PropertyName" ||
@@ -22982,9 +22983,9 @@ https://github.com/A99US/CM6-Browser-Wrapper
            return { from: node.from, options: values, validFor: identifier$1 };
        if (node.name == "PseudoClassName")
            return { from: node.from, options: pseudoClasses, validFor: identifier$1 };
-       if (node.name == "VariableName" || (context.explicit || isDash) && isVarArg(node, state.doc))
-           return { from: node.name == "VariableName" ? node.from : pos,
-               options: variableNames(state.doc, astTop(node)),
+       if (isVariable(node) || (context.explicit || isDash) && isVarArg(node, state.doc))
+           return { from: isVariable(node) || isDash ? node.from : pos,
+               options: variableNames(state.doc, astTop(node), isVariable),
                validFor: variable };
        if (node.name == "TagName") {
            for (let { parent } = node; parent; parent = parent.parent)
@@ -23003,6 +23004,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
            return { from: pos, options: properties(), validFor: identifier$1 };
        return null;
    };
+   /**
+   CSS property, variable, and value keyword completion source.
+   */
+   const cssCompletionSource = /*@__PURE__*/defineCSSCompletionSource(n => n.name == "VariableName");
 
    /**
    A language provider based on the [Lezer CSS
@@ -23321,14 +23326,14 @@ https://github.com/A99US/CM6-Browser-Wrapper
    selection range that has the same text in front of it.
    */
    function insertCompletionText(state, text, from, to) {
-       let { main } = state.selection, len = to - from;
+       let { main } = state.selection, fromOff = from - main.from, toOff = to - main.from;
        return Object.assign(Object.assign({}, state.changeByRange(range => {
-           if (range != main && len &&
-               state.sliceDoc(range.from - len, range.from + to - main.from) != state.sliceDoc(from, to))
+           if (range != main && from != to &&
+               state.sliceDoc(range.from + fromOff, range.from + toOff) != state.sliceDoc(from, to))
                return { range };
            return {
-               changes: { from: range.from - len, to: to == main.from ? range.to : range.from + to - main.from, insert: text },
-               range: EditorSelection.cursor(range.from - len + text.length)
+               changes: { from: range.from + fromOff, to: to == main.from ? range.to : range.from + toOff, insert: text },
+               range: EditorSelection.cursor(range.from + fromOff + text.length)
            };
        })), { userEvent: "input.complete" });
    }
@@ -24587,7 +24592,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let spec = {
                changes: { from, to, insert: Text.of(text) },
                scrollIntoView: true,
-               annotations: pickedCompletion.of(completion)
+               annotations: completion ? pickedCompletion.of(completion) : undefined
            };
            if (ranges.length)
                spec.selection = fieldSelection(ranges, 0);
@@ -26361,7 +26366,11 @@ https://github.com/A99US/CM6-Browser-Wrapper
        return new LanguageSupport(jsonLanguage);
    }
 
-   function snippetmaker(data){
+   /*
+   https://github.com/A99US/codemirror-6-snippetbuilder
+   */
+
+   function snippetbuilder(data){
      let prefix = (data['prefix'] || ''), scope = (data['scope'] || '').trim(),
          result = [], detailtext = '', bodytext = '', labeltext = '';
      for (const [key, value] of Object.entries(data['source'])) {
@@ -26385,80 +26394,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
      }
      return result;
    }
-
-   /*
-
-   import snippet_php_h4kst3r from './snippet_php_h4kst3r.ts'
-   import snippet_html_abusaidm from './snippet_html_abusaidm.ts'
-   import snippet_jquery_DonJayamanne from './snippet_jquery_DonJayamanne.ts'
-   import snippet_js_xabikos from './snippet_js_xabikos.ts'
-   import snippet_js_capaj from './snippet_js_capaj.ts'
-   import snippet_js_jabacchetta from './snippet_js_jabacchetta.ts'
-   import snippet_js_nathanchapman from './snippet_js_nathanchapman.ts'
-
-   import snippet_php_heberalmeida from './snippet_php_heberalmeida.ts'
-   import snippet_php_microsoft_vscode from './snippet_php_microsoft_vscode.ts'
-
-   snippet_php_heberalmeida : Not complete, Not best, ignore description
-   snippet_php_microsoft_vscode is error, find others php snippet
-
-   BEST
-   JS : snippet_js_capaj, snippet_js_nathanchapman, snippet_js_jabacchetta, snippet_js_xabikos
-   PHP : h4kst3r_php_awesome
-
-   snippet_js_capaj, add unavailable ones from nathanchapman and jabacchetta
-
-   { ...snippet_js_jabacchetta, ...snippet_js_nathanchapman }
-
-   */
-
-   /*
-
-   var opt = {
-   						// lang : [ scope, sourcearray, |0,1| (1 to ignore description) ]
-   						js: ['javascript', snippet_js_capaj, 0],
-   						jquery: ['jquery', snippet_jquery_DonJayamanne, 0],
-   						php: ['php', snippet_php_h4kst3r, 0],
-   						html: ['html', snippet_html_abusaidm, 0]
-   					}
-   		;// ,snippetlist = {js: '', jquery: '', php: '', html: ''};
-
-   const makelist = (arr) => {
-   	var customchar = "_ ", // Append to popup option, to differentiate with native snippets
-   			result = [], detailtext = '', bodytext = '', labeltext = '';
-   	for (const [key, value] of Object.entries(arr[1])) {
-   		if(typeof value["scope"] !== 'undefined' && !(value["scope"].includes(arr[0]))){
-   			continue;
-   		}
-   		bodytext = (Array.isArray(value["body"])) ?
-   								value["body"].join("\n") :
-   								value["body"];
-   		labeltext = customchar + key;
-   		detailtext = (arr[2] == 1 || typeof value["description"] === 'undefined') ?
-   									'' :
-   									': '+ value["description"];
-   		result.push(
-   				snippetCompletion(bodytext, {
-   					label: labeltext,
-   					detail: detailtext,
-   					type: "keyword"
-   				})
-   		);
-   	}
-   	return result;
-   }
-
-   snippetlist['js'] = makelist(opt['js']);
-   snippetlist['jquery'] = makelist(opt['jquery']);
-   snippetlist['php'] = makelist(opt['php']);
-   snippetlist['html'] = makelist(opt['html']);
-
-   // export default snippetlist
-
-
-   /*
-
-   */
 
    /*
 
@@ -33181,7 +33116,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        if (setting['snippets']) {
            if (setting['snippets'].includes('js') || setting['snippets'].includes('javascript')) {
                customExt.push(javascriptLanguage.data.of({
-                   autocomplete: snippetmaker({
+                   autocomplete: snippetbuilder({
                        scope: 'js',
                        source: snippet_js_capaj,
                        prefix: ''
@@ -33190,7 +33125,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            }
            if (setting['snippets'].includes('jquery')) {
                customExt.push(javascriptLanguage.data.of({
-                   autocomplete: snippetmaker({
+                   autocomplete: snippetbuilder({
                        scope: 'jquery',
                        source: snippet_jquery_DonJayamanne,
                        prefix: ''
@@ -33199,7 +33134,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            }
            if (setting['snippets'].includes('html')) {
                customExt.push(htmlLanguage.data.of({
-                   autocomplete: snippetmaker({
+                   autocomplete: snippetbuilder({
                        scope: 'html',
                        source: snippet_html_abusaidm,
                        prefix: ''
@@ -33208,7 +33143,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            }
            if (setting['snippets'].includes('php')) {
                customExt.push(phpLanguage.data.of({
-                   autocomplete: snippetmaker({
+                   autocomplete: snippetbuilder({
                        scope: 'php',
                        source: snippet_php_h4kst3r,
                        prefix: ''
