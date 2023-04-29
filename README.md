@@ -215,14 +215,13 @@ You can use all of them or only some
 SELECT OPTION FOR THEME
 Available themes :
 DefaultTheme (aceCobalt, mix of ivqonsanada/codemirror6-themes material-darker.ts and Ace Editor's Cobalt)
-amy, barf, bespin, birdsOfParadise, boysAndGirls, cobalt, coolGlow, dracula (By thememirror)
-basicDark, basicLight, gruvboxDark, gruvboxLight, materialDark, nord, solarizedDark, solarizedLight (By craftzdog/cm6-themes)
+materialLight, materialDark, solarizedLight, solarizedDark, dracula, githubLight, githubDark, aura, tokyoNight, tokyoNightStorm, tokyoNightDay (By @dennis84/codemirror-themes)
 You can use all of them or only some
 -->
 <select id="CMEditorPrefix-settheme-editordiv">
     <option value="DefaultTheme">DefaultTheme</option>
-    <option value="dracula">dracula</option>
-    <option value="materialDark">materialDark</option>
+    <option value="materialLight">materialLight</option>
+    <option value="tokyoNight">tokyoNight</option>
 </select>
 ```
 
@@ -271,8 +270,7 @@ $(document).ready(function() {
 ## Credits
 
  - [CodeMirror 6](https://codemirror.net/)
- - CM6 Themes by [vadimdemedes/thememirror](https://github.com/vadimdemedes/thememirror)
- - CM6 Themes by [craftzdog/cm6-themes](https://github.com/craftzdog/cm6-themes)
+ - CM6 Themes by [@dennis84/codemirror-themes](https://github.com/dennis84/codemirror-themes)
  - HTML Snippets from [abusaidm/html-snippets](https://github.com/abusaidm/html-snippets)
  - JQuery Snippets from [DonJayamanne/jquerysnippets](https://github.com/DonJayamanne/jquerysnippets)
  - JavaScript Snippets from [jabacchetta/vscode-javascript-snippets](https://github.com/jabacchetta/vscode-javascript-snippets), [capaj/vscode-standardjs-snippets](https://github.com/capaj/vscode-standardjs-snippets), [xabikos/vscode-javascript](https://github.com/xabikos/vscode-javascript) and [nathanchapman/vscode-javascript-snippets](https://github.com/nathanchapman/vscode-javascript-snippets)
