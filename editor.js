@@ -33,6 +33,37 @@ import snippet_js_capaj from './asset/snippet_js_capaj.ts'
 
 import { aceCobalt as DefaultTheme } from './asset/theme_ace_cobalt.ts'
 import { materialDarker } from './asset/theme_material_darker.ts'
+/*
+Kept getting error, might be NPM Version
+I'm On win7, can't update NPM Version
+Use next commented lines if you're on latest NPM Version
+import {materialLight} from './ddietr.theme/material-light.ts'
+import {materialDark} from './ddietr.theme/material-dark.ts'
+import {solarizedLight} from './ddietr.theme/solarized-light.ts'
+import {solarizedDark} from './ddietr.theme/solarized-dark.ts'
+import {dracula} from './ddietr.theme/dracula.ts'
+import {githubLight} from './ddietr.theme/github-light.ts'
+import {githubDark} from './ddietr.theme/github-dark.ts'
+import {aura} from './ddietr.theme/aura.ts'
+import {tokyoNight} from './ddietr.theme/tokyo-night.ts'
+import {tokyoNightStorm} from './ddietr.theme/tokyo-night-storm.ts'
+import {tokyoNightDay} from './ddietr.theme/tokyo-night-day.ts'
+*/
+import {materialLight} from '@ddietr/codemirror-themes/material-light'
+import {materialDark} from '@ddietr/codemirror-themes/material-dark'
+import {solarizedLight} from '@ddietr/codemirror-themes/solarized-light'
+import {solarizedDark} from '@ddietr/codemirror-themes/solarized-dark'
+import {dracula} from '@ddietr/codemirror-themes/dracula'
+import {githubLight} from '@ddietr/codemirror-themes/github-light'
+import {githubDark} from '@ddietr/codemirror-themes/github-dark'
+import {aura} from '@ddietr/codemirror-themes/aura'
+import {tokyoNight} from '@ddietr/codemirror-themes/tokyo-night'
+import {tokyoNightStorm} from '@ddietr/codemirror-themes/tokyo-night-storm'
+import {tokyoNightDay} from '@ddietr/codemirror-themes/tokyo-night-day'
+/*
+*/
+/*
+Not using these, Not updated, breaking change
 import {
     amy as amy,
     barf as barf,
@@ -51,7 +82,7 @@ import { materialDark } from 'cm6-theme-material-dark'
 import { nord } from 'cm6-theme-nord'
 import { solarizedDark } from 'cm6-theme-solarized-dark'
 import { solarizedLight } from 'cm6-theme-solarized-light'
-
+*/
 let languageConf = new Compartment,
     themeConf = new Compartment,
     linewrapConf = new Compartment,
@@ -66,6 +97,20 @@ let languageConf = new Compartment,
     },
     themeopt = {
         DefaultTheme: DefaultTheme,
+        materialDarker: materialDarker,
+        aura: aura,
+        dracula: dracula,
+        githubLight: githubLight,
+        githubDark: githubDark,
+        materialDark: materialDark,
+        materialLight: materialLight,
+        solarizedLight: solarizedLight,
+        solarizedDark: solarizedDark,
+        tokyoNight: tokyoNight,
+        tokyoNightDay: tokyoNightDay,
+        tokyoNightStorm: tokyoNightStorm,
+        /*
+        Theme not up-to-date
         amy: amy,
         barf: barf,
         bespin: bespin,
@@ -79,10 +124,10 @@ let languageConf = new Compartment,
         gruvboxDark: gruvboxDark,
         gruvboxLight: gruvboxLight,
         materialDark: materialDark,
-        materialDarker: materialDarker,
         nord: nord,
         solarizedDark: solarizedDark,
         solarizedLight: solarizedLight
+        */
     };
 
 let extensionArray = [],

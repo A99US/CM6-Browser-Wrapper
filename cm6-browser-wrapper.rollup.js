@@ -24723,7 +24723,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return definedClosing.charAt(i + 1);
        return fromCodePoint(ch < 128 ? ch : ch + 1);
    }
-   function config(state, pos) {
+   function config$b(state, pos) {
        return state.languageDataAt("closeBrackets", pos)[0] || defaults;
    }
    const android$1 = typeof navigator == "object" && /*@__PURE__*//Android\b/.test(navigator.userAgent);
@@ -24747,7 +24747,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
    const deleteBracketPair = ({ state, dispatch }) => {
        if (state.readOnly)
            return false;
-       let conf = config(state, state.selection.main.head);
+       let conf = config$b(state, state.selection.main.head);
        let tokens = conf.brackets || defaults.brackets;
        let dont = null, changes = state.changeByRange(range => {
            if (range.empty) {
@@ -24783,7 +24783,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
    take care of running this for user input.)
    */
    function insertBracket(state, bracket) {
-       let conf = config(state, state.selection.main.head);
+       let conf = config$b(state, state.selection.main.head);
        let tokens = conf.brackets || defaults.brackets;
        for (let tok of tokens) {
            let closed = closing(codePointAt(tok, 0));
@@ -29924,12 +29924,12 @@ https://github.com/A99US/CM6-Browser-Wrapper
 
    */
 
-   const base01$6 = '#505d64', base02$6 = '#606f7a', base03$6 = '#707d8b', base05$5 = '#bdbdbd', base06$5 = '#e0e0e0', base07$5 = '#fdf6e3', base_red$3 = '#ff5f52', base_pink$1 = '#fa5788', base_yellow$3 = '#facf4e', base_orange$3 = '#ffad42', base_cyan$3 = '#56c8d8', base_indigo$1 = '#7186f0', base_purple$1 = '#cf6edf', base_green$3 = '#6abf69', base_lightgreen$1 = '#99d066', base_teal$1 = '#4ebaaa';
+   const base01 = '#505d64', base02 = '#606f7a', base03 = '#707d8b', base05 = '#bdbdbd', base06 = '#e0e0e0', base07 = '#fdf6e3', base_red = '#ff5f52', base_pink = '#fa5788', base_yellow = '#facf4e', base_orange = '#ffad42', base_cyan = '#56c8d8', base_indigo = '#7186f0', base_purple = '#cf6edf', base_green = '#6abf69', base_lightgreen = '#99d066', base_teal = '#4ebaaa';
 
-   const invalid$9 = base_red$3,
-   darkBackground$9 = '#202325',
-   highlightBackground$9 = 'rgba(0, 0, 0, 0.35)', // '#545b61',
-   tooltipBackground$9 = base01$6, acecursor = '#FFFFFF', aceselection = 'rgba(179, 101, 57, 0.75)';
+   const invalid$1 = base_red,
+   darkBackground$1 = '#202325',
+   highlightBackground$1 = 'rgba(0, 0, 0, 0.35)', // '#545b61',
+   tooltipBackground$1 = base01, acecursor = '#FFFFFF', aceselection = 'rgba(179, 101, 57, 0.75)';
 
    /*
 
@@ -29948,34 +29948,34 @@ https://github.com/A99US/CM6-Browser-Wrapper
        },
 
        '.cm-cursor, .cm-dropCursor': { borderLeftColor: acecursor },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
+       '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
          { backgroundColor: aceselection },
 
-       '.cm-panels': { backgroundColor: darkBackground$9, color: base03$6 },
+       '.cm-panels': { backgroundColor: darkBackground$1, color: base03 },
        '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
        '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
 
        '.cm-searchMatch': {
-         outline: `1px solid ${base_yellow$3}`,
+         outline: `1px solid ${base_yellow}`,
          backgroundColor: 'transparent'
        },
        '.cm-searchMatch.cm-searchMatch-selected': {
-         backgroundColor: highlightBackground$9
+         backgroundColor: highlightBackground$1
        },
 
-       '.cm-activeLine': { backgroundColor: highlightBackground$9 },
+       '.cm-activeLine': { backgroundColor: highlightBackground$1 },
        '.cm-selectionMatch': {
-         backgroundColor: darkBackground$9,
-         outline: `1px solid ${base_teal$1}`
+         backgroundColor: darkBackground$1,
+         outline: `1px solid ${base_teal}`
        },
 
        '&.cm-focused .cm-matchingBracket': {
-         color: base06$5,
-         outline: `1px solid ${base_teal$1}`
+         color: base06,
+         outline: `1px solid ${base_teal}`
        },
 
        '&.cm-focused .cm-nonmatchingBracket': {
-         color: base_red$3
+         color: base_red
        },
 
        '.cm-gutters': {
@@ -29985,8 +29985,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
        },
 
        '.cm-activeLineGutter': {
-         backgroundColor: highlightBackground$9,
-         color: base07$5
+         backgroundColor: highlightBackground$1,
+         color: base07
        },
 
        '.cm-foldPlaceholder': {
@@ -29997,19 +29997,19 @@ https://github.com/A99US/CM6-Browser-Wrapper
 
        '.cm-tooltip': {
          border: 'none',
-         backgroundColor: tooltipBackground$9
+         backgroundColor: tooltipBackground$1
        },
        '.cm-tooltip .cm-tooltip-arrow:before': {
          borderTopColor: 'transparent',
          borderBottomColor: 'transparent'
        },
        '.cm-tooltip .cm-tooltip-arrow:after': {
-         borderTopColor: tooltipBackground$9,
-         borderBottomColor: tooltipBackground$9
+         borderTopColor: tooltipBackground$1,
+         borderBottomColor: tooltipBackground$1
        },
        '.cm-tooltip-autocomplete': {
          '& > ul > li[aria-selected]': {
-           backgroundColor: highlightBackground$9,
+           backgroundColor: highlightBackground$1,
            // color: base03
          }
        }
@@ -30029,13 +30029,13 @@ https://github.com/A99US/CM6-Browser-Wrapper
      },
      {
        tag: [tags$1.name, tags$1.deleted, tags$1.macroName],
-       color: base_cyan$3
+       color: base_cyan
      },
      {
        tag: tags$1.character,
        color: '#FF628C' //base_cyan
      },
-     { tag: [tags$1.propertyName], color: base_yellow$3 },
+     { tag: [tags$1.propertyName], color: base_yellow },
      {
        tag: [tags$1.variableName],
        color: '#CCCCCC' //base05
@@ -30044,35 +30044,35 @@ https://github.com/A99US/CM6-Browser-Wrapper
        tag: [tags$1.function(tags$1.variableName)],
        color: '#FFB054' //base_cyan
      },
-     { tag: [tags$1.labelName], color: base_purple$1 },
+     { tag: [tags$1.labelName], color: base_purple },
      {
        tag: [tags$1.color, tags$1.standard(tags$1.name)],
-       color: base_yellow$3
+       color: base_yellow
      },
      {
        tag: tags$1.constant(tags$1.name),
        color: '#FF628C' //base_yellow
      },
-     { tag: [tags$1.definition(tags$1.name), tags$1.separator], color: base_pink$1 },
+     { tag: [tags$1.definition(tags$1.name), tags$1.separator], color: base_pink },
      {
        tag: [tags$1.brace],
        color: 'white' // base_purple
      },
      {
        tag: [tags$1.annotation],
-       color: invalid$9
+       color: invalid$1
      },
      {
        tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-       color: base_orange$3
+       color: base_orange
      },
      {
        tag: [tags$1.typeName, tags$1.className],
-       color: base_orange$3
+       color: base_orange
      },
      {
        tag: [tags$1.operator, tags$1.operatorKeyword],
-       color: base_indigo$1
+       color: base_indigo
      },
      {
        tag: [tags$1.tagName],
@@ -30080,28 +30080,28 @@ https://github.com/A99US/CM6-Browser-Wrapper
      },
      {
        tag: [tags$1.squareBracket],
-       color: base_red$3
+       color: base_red
      },
      {
        tag: [tags$1.angleBracket],
-       color: base02$6
+       color: base02
      },
      {
        tag: [tags$1.attributeName],
-       color: base05$5
+       color: base05
      },
      {
        tag: [tags$1.regexp],
-       color: invalid$9
+       color: invalid$1
      },
      {
        tag: [tags$1.quote],
-       color: base_green$3
+       color: base_green
      },
      { tag: [tags$1.string], color: '#3AD900' /*base_lightgreen*/ },
      {
        tag: tags$1.link,
-       color: base_cyan$3,
+       color: base_cyan,
        textDecoration: 'underline',
        textUnderlinePosition: 'under'
      },
@@ -30118,33 +30118,33 @@ https://github.com/A99US/CM6-Browser-Wrapper
        color: '#0088FF', //base03,
        fontStyle: 'italic'
      },
-     { tag: tags$1.monospace, color: base05$5 },
-     { tag: tags$1.strong, fontWeight: 'bold', color: base_red$3 },
-     { tag: tags$1.emphasis, fontStyle: 'italic', color: base_lightgreen$1 },
+     { tag: tags$1.monospace, color: base05 },
+     { tag: tags$1.strong, fontWeight: 'bold', color: base_red },
+     { tag: tags$1.emphasis, fontStyle: 'italic', color: base_lightgreen },
      { tag: tags$1.strikethrough, textDecoration: 'line-through' },
      {
        tag: tags$1.heading,
        fontWeight: 'bold',
        color: '#C8E4FD' //base_yellow
      },
-     { tag: tags$1.heading1, fontWeight: 'bold', color: base_yellow$3 },
+     { tag: tags$1.heading1, fontWeight: 'bold', color: base_yellow },
      {
        tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
        fontWeight: 'bold',
-       color: base_yellow$3
+       color: base_yellow
      },
      {
        tag: [tags$1.heading5, tags$1.heading6],
-       color: base_yellow$3
+       color: base_yellow
      },
-     { tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: base_cyan$3 },
+     { tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: base_cyan },
      {
        tag: [tags$1.processingInstruction, tags$1.inserted],
-       color: base_red$3
+       color: base_red
      },
      {
        tag: [tags$1.contentSeparator],
-       color: base_cyan$3
+       color: base_cyan
      },
      {
        tag: tags$1.invalid,
@@ -30206,28 +30206,28 @@ https://github.com/A99US/CM6-Browser-Wrapper
      Website:    https://material-theme.site/
    */
 
-   const ivory = '#abb2bf', stone$1 = '#7d8799', invalid$8 = '#ffffff', darkBackground$8 = '#21252b', highlightBackground$8 = 'rgba(0, 0, 0, 0.5)', background$8 = '#000000', tooltipBackground$8 = '#353a42', selection$8 = 'rgba(128, 203, 196, 0.2)', cursor$8 = '#ffcc00';
+   const ivory = '#abb2bf', stone = '#7d8799', invalid = '#ffffff', darkBackground = '#21252b', highlightBackground = 'rgba(0, 0, 0, 0.5)', background = '#000000', tooltipBackground = '#353a42', selection = 'rgba(128, 203, 196, 0.2)', cursor = '#ffcc00';
 
    // The editor theme styles for Material Darker. background = '#212121'
    const materialDarkerTheme = EditorView.theme(
      {
        '&': {
          color: '#eeffff',
-         backgroundColor: background$8
+         backgroundColor: background
        },
 
        '.cm-content': {
-         caretColor: cursor$8
+         caretColor: cursor
        },
 
        '&.cm-focused .cm-cursor': {
-         borderLeftColor: cursor$8
+         borderLeftColor: cursor
        },
 
        '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
-         { backgroundColor: selection$8 },
+         { backgroundColor: selection },
 
-       '.cm-panels': { backgroundColor: darkBackground$8, color: '#ffffff' },
+       '.cm-panels': { backgroundColor: darkBackground, color: '#ffffff' },
        '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
        '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
 
@@ -30248,13 +30248,13 @@ https://github.com/A99US/CM6-Browser-Wrapper
        },
 
        '.cm-gutters': {
-         background: background$8,
+         background: background,
          color: '#545454',
          border: 'none'
        },
 
        '.cm-activeLineGutter': {
-         backgroundColor: highlightBackground$8
+         backgroundColor: highlightBackground
        },
 
        '.cm-foldPlaceholder': {
@@ -30265,19 +30265,19 @@ https://github.com/A99US/CM6-Browser-Wrapper
 
        '.cm-tooltip': {
          border: 'none',
-         backgroundColor: tooltipBackground$8
+         backgroundColor: tooltipBackground
        },
        '.cm-tooltip .cm-tooltip-arrow:before': {
          borderTopColor: 'transparent',
          borderBottomColor: 'transparent'
        },
        '.cm-tooltip .cm-tooltip-arrow:after': {
-         borderTopColor: tooltipBackground$8,
-         borderBottomColor: tooltipBackground$8
+         borderTopColor: tooltipBackground,
+         borderBottomColor: tooltipBackground
        },
        '.cm-tooltip-autocomplete': {
          '& > ul > li[aria-selected]': {
-           backgroundColor: highlightBackground$8,
+           backgroundColor: highlightBackground,
            color: ivory
          }
        }
@@ -30296,7 +30296,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
      { tag: tags$1.definition(tags$1.variableName), color: '#82aaff' },
      { tag: tags$1.string, color: '#c3e88d' },
      { tag: tags$1.special(tags$1.string), color: '#f07178' },
-     { tag: tags$1.comment, color: stone$1 },
+     { tag: tags$1.comment, color: stone },
      { tag: tags$1.variableName, color: '#f07178' },
      { tag: tags$1.tagName, color: '#ff5370' },
      { tag: tags$1.bracket, color: '#948989' },
@@ -30304,7 +30304,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
      { tag: tags$1.attributeName, color: '#c792ea' },
      { tag: tags$1.propertyName, color: '#c792ea' },
      { tag: tags$1.className, color: '#decb6b' },
-     { tag: tags$1.invalid, color: invalid$8 }
+     { tag: tags$1.invalid, color: invalid }
    ]);
 
    /// Extension to enable the Material Darker theme (both the editor theme and
@@ -30314,2440 +30314,1313 @@ https://github.com/A99US/CM6-Browser-Wrapper
      syntaxHighlighting(materialDarkerHighlightStyle)
    ];
 
-   const createTheme = ({ variant, settings, styles }) => {
-       const theme = EditorView.theme({
-           // eslint-disable-next-line @typescript-eslint/naming-convention
-           '&': {
-               backgroundColor: settings.background,
-               color: settings.foreground,
-           },
-           '.cm-content': {
-               caretColor: settings.caret,
-           },
-           '.cm-cursor, .cm-dropCursor': {
-               borderLeftColor: settings.caret,
-           },
-           '&.cm-focused .cm-selectionBackgroundm .cm-selectionBackground, .cm-content ::selection': {
-               backgroundColor: settings.selection,
-           },
-           '.cm-activeLine': {
-               backgroundColor: settings.lineHighlight,
-           },
-           '.cm-gutters': {
-               backgroundColor: settings.gutterBackground,
-               color: settings.gutterForeground,
-           },
-           '.cm-activeLineGutter': {
-               backgroundColor: settings.lineHighlight,
-           },
-       }, {
-           dark: variant === 'dark',
-       });
-       const highlightStyle = HighlightStyle.define(styles);
-       const extension = [theme, syntaxHighlighting(highlightStyle)];
-       return extension;
+   const config$a = {
+     name: 'materialLight',
+     dark: false,
+     background: '#FAFAFA',
+     foreground: '#90A4AE',
+     selection: '#80CBC440',
+     cursor: '#272727',
+     dropdownBackground: '#FAFAFA',
+     dropdownBorder: '#00000010',
+     activeLine: '#CCD7DA50',
+     matchingBracket: '#FAFAFA',
+     keyword: '#39ADB5',
+     storage: '#39ADB5',
+     variable: '#90A4AE',
+     parameter: '#90A4AE',
+     function: '#6182B8',
+     string: '#91B859',
+     constant: '#39ADB5',
+     type: '#E2931D',
+     class: '#E2931D',
+     number: '#F76D47',
+     comment: '#90A4AE',
+     heading: '#39ADB5',
+     invalid: '#E5393570',
+     regexp: '#91B859',
    };
 
-   // Author: William D. Neumann
-   const amy = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#200020',
-           foreground: '#D0D0FF',
-           caret: '#7070FF',
-           selection: '#80000080',
-           gutterBackground: '#200020',
-           gutterForeground: '#C080C0',
-           lineHighlight: '#80000040',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#404080',
-           },
-           {
-               tag: [tags$1.string, tags$1.regexp],
-               color: '#999999',
-           },
-           {
-               tag: tags$1.number,
-               color: '#7090B0',
-           },
-           {
-               tag: [tags$1.bool, tags$1.null],
-               color: '#8080A0',
-           },
-           {
-               tag: [tags$1.punctuation, tags$1.derefOperator],
-               color: '#805080',
-           },
-           {
-               tag: tags$1.keyword,
-               color: '#60B0FF',
-           },
-           {
-               tag: tags$1.definitionKeyword,
-               color: '#B0FFF0',
-           },
-           {
-               tag: tags$1.moduleKeyword,
-               color: '#60B0FF',
-           },
-           {
-               tag: tags$1.operator,
-               color: '#A0A0FF',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.self],
-               color: '#008080',
-           },
-           {
-               tag: tags$1.operatorKeyword,
-               color: '#A0A0FF',
-           },
-           {
-               tag: tags$1.controlKeyword,
-               color: '#80A0FF',
-           },
-           {
-               tag: tags$1.className,
-               color: '#70E080',
-           },
-           {
-               tag: [tags$1.function(tags$1.propertyName), tags$1.propertyName],
-               color: '#50A0A0',
-           },
-           {
-               tag: tags$1.tagName,
-               color: '#009090',
-           },
-           {
-               tag: tags$1.modifier,
-               color: '#B0FFF0',
-           },
-           {
-               tag: [tags$1.squareBracket, tags$1.attributeName],
-               color: '#D0D0FF',
-           },
-       ],
-   });
+   const materialLightTheme = EditorView.theme({
+     '&': {
+       color: config$a.foreground,
+       backgroundColor: config$a.background,
+     },
 
-   // Author: Konstantin Pschera
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#fcfcfc',
-           foreground: '#5c6166',
-           caret: '#ffaa33',
-           selection: '#036dd626',
-           gutterBackground: '#fcfcfc',
-           gutterForeground: '#8a919966',
-           lineHighlight: '#8a91991a',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#787b8099',
-           },
-           {
-               tag: tags$1.string,
-               color: '#86b300',
-           },
-           {
-               tag: tags$1.regexp,
-               color: '#4cbf99',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#ffaa33',
-           },
-           {
-               tag: tags$1.variableName,
-               color: '#5c6166',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#fa8d3e',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.special(tags$1.brace)],
-               color: '#fa8d3e',
-           },
-           {
-               tag: tags$1.operator,
-               color: '#ed9366',
-           },
-           {
-               tag: tags$1.separator,
-               color: '#5c6166b3',
-           },
-           {
-               tag: tags$1.punctuation,
-               color: '#5c6166',
-           },
-           {
-               tag: [tags$1.definition(tags$1.propertyName), tags$1.function(tags$1.variableName)],
-               color: '#f2ae49',
-           },
-           {
-               tag: [tags$1.className, tags$1.definition(tags$1.typeName)],
-               color: '#22a4e6',
-           },
-           {
-               tag: [tags$1.tagName, tags$1.typeName, tags$1.self, tags$1.labelName],
-               color: '#55b4d4',
-           },
-           {
-               tag: tags$1.angleBracket,
-               color: '#55b4d480',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#f2ae49',
-           },
-       ],
-   });
+     '.cm-content': {caretColor: config$a.cursor},
 
-   // Author: unknown
-   const barf = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#15191EFA',
-           foreground: '#EEF2F7',
-           caret: '#C4C4C4',
-           selection: '#90B2D557',
-           gutterBackground: '#15191EFA',
-           gutterForeground: '#aaaaaa95',
-           lineHighlight: '#57575712',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#6E6E6E',
-           },
-           {
-               tag: [tags$1.string, tags$1.regexp, tags$1.special(tags$1.brace)],
-               color: '#5C81B3',
-           },
-           {
-               tag: tags$1.number,
-               color: '#C1E1B8',
-           },
-           {
-               tag: tags$1.bool,
-               color: '#53667D',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier, tags$1.function(tags$1.propertyName)],
-               color: '#A3D295',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.moduleKeyword, tags$1.operatorKeyword, tags$1.operator],
-               color: '#697A8E',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.attributeName],
-               color: '#708E67',
-           },
-           {
-               tag: [
-                   tags$1.function(tags$1.variableName),
-                   tags$1.definition(tags$1.propertyName),
-                   tags$1.derefOperator,
-               ],
-               color: '#fff',
-           },
-           {
-               tag: tags$1.tagName,
-               color: '#A3D295',
-           },
-       ],
-   });
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$a.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$a.selection},
 
-   // Author: Michael Diolosa
-   const bespin = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#2e241d',
-           foreground: '#BAAE9E',
-           caret: '#A7A7A7',
-           selection: '#DDF0FF33',
-           gutterBackground: '#28211C',
-           gutterForeground: '#BAAE9E90',
-           lineHighlight: '#FFFFFF08',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#666666',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace)],
-               color: '#54BE0D',
-           },
-           {
-               tag: tags$1.regexp,
-               color: '#E9C062',
-           },
-           {
-               tag: tags$1.number,
-               color: '#CF6A4C',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator],
-               color: '#5EA6EA',
-           },
-           {
-               tag: tags$1.variableName,
-               color: '#7587A6',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#F9EE98',
-           },
-           {
-               tag: [tags$1.propertyName, tags$1.function(tags$1.variableName)],
-               color: '#937121',
-           },
-           {
-               tag: [tags$1.typeName, tags$1.angleBracket, tags$1.tagName],
-               color: '#9B859D',
-           },
-       ],
-   });
+     '.cm-panels': {backgroundColor: config$a.dropdownBackground, color: config$a.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
 
-   // Author: Joe Bergantine
-   const birdsOfParadise = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#3b2627',
-           foreground: '#E6E1C4',
-           caret: '#E6E1C4',
-           selection: '#16120E',
-           gutterBackground: '#3b2627',
-           gutterForeground: '#E6E1C490',
-           lineHighlight: '#1F1611',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#6B4E32',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator, tags$1.derefOperator],
-               color: '#EF5D32',
-           },
-           {
-               tag: tags$1.className,
-               color: '#EFAC32',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [
-                   tags$1.typeName,
-                   tags$1.propertyName,
-                   tags$1.function(tags$1.variableName),
-                   tags$1.definition(tags$1.variableName),
-               ],
-               color: '#EFAC32',
-           },
-           {
-               tag: tags$1.definition(tags$1.typeName),
-               color: '#EFAC32',
-               fontWeight: 'bold',
-           },
-           {
-               tag: tags$1.labelName,
-               color: '#EFAC32',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool],
-               color: '#6C99BB',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.self],
-               color: '#7DAF9C',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace), tags$1.regexp],
-               color: '#D9D762',
-           },
-           {
-               tag: [tags$1.angleBracket, tags$1.tagName, tags$1.attributeName],
-               color: '#EFCB43',
-           },
-       ],
-   });
+     '.cm-searchMatch': {
+       backgroundColor: config$a.dropdownBackground,
+       outline: `1px solid ${config$a.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$a.selection
+     },
 
-   // Author: unknown
-   const boysAndGirls = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#000205',
-           foreground: '#FFFFFF',
-           caret: '#E60065',
-           selection: '#E60C6559',
-           gutterBackground: '#000205',
-           gutterForeground: '#ffffff90',
-           lineHighlight: '#4DD7FC1A',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#404040',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace), tags$1.regexp],
-               color: '#00D8FF',
-           },
-           {
-               tag: tags$1.number,
-               color: '#E62286',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.attributeName, tags$1.self],
-               color: '#E62286',
-               fontWeight: 'bold',
-           },
-           {
-               tag: tags$1.function(tags$1.variableName),
-               color: '#fff',
-               fontWeight: 'bold',
-           },
-       ],
-   });
+     '.cm-activeLine': {backgroundColor: config$a.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$a.selection},
 
-   // Author: Fred LeBlanc
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#fff',
-           foreground: '#000',
-           caret: '#000',
-           selection: '#BDD5FC',
-           gutterBackground: '#fff',
-           gutterForeground: '#00000070',
-           lineHighlight: '#FFFBD1',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#BCC8BA',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace), tags$1.regexp],
-               color: '#5D90CD',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#46A609',
-           },
-           {
-               tag: tags$1.keyword,
-               color: '#AF956F',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#C52727',
-           },
-           {
-               tag: [tags$1.angleBracket, tags$1.tagName, tags$1.attributeName],
-               color: '#606060',
-           },
-           {
-               tag: tags$1.self,
-               color: '#000',
-           },
-       ],
-   });
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$a.matchingBracket,
+       outline: 'none'
+     },
 
-   // Author: Jacob Rus
-   const cobalt = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#00254b',
-           foreground: '#FFFFFF',
-           caret: '#FFFFFF',
-           selection: '#B36539BF',
-           gutterBackground: '#00254b',
-           gutterForeground: '#FFFFFF70',
-           lineHighlight: '#00000059',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#0088FF',
-           },
-           {
-               tag: tags$1.string,
-               color: '#3AD900',
-           },
-           {
-               tag: tags$1.regexp,
-               color: '#80FFC2',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#FF628C',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#FFEE80',
-           },
-           {
-               tag: tags$1.variableName,
-               color: '#CCCCCC',
-           },
-           {
-               tag: tags$1.self,
-               color: '#FF80E1',
-           },
-           {
-               tag: [
-                   tags$1.className,
-                   tags$1.definition(tags$1.propertyName),
-                   tags$1.function(tags$1.variableName),
-                   tags$1.definition(tags$1.typeName),
-                   tags$1.labelName,
-               ],
-               color: '#FFDD00',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator],
-               color: '#FF9D00',
-           },
-           {
-               tag: [tags$1.propertyName, tags$1.typeName],
-               color: '#80FFBB',
-           },
-           {
-               tag: tags$1.special(tags$1.brace),
-               color: '#EDEF7D',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#9EFFFF',
-           },
-           {
-               tag: tags$1.derefOperator,
-               color: '#fff',
-           },
-       ],
-   });
+     '.cm-gutters': {
+       backgroundColor: config$a.background,
+       color: config$a.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$a.background},
 
-   // Author: unknown
-   const coolGlow = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#060521',
-           foreground: '#E0E0E0',
-           caret: '#FFFFFFA6',
-           selection: '#122BBB',
-           gutterBackground: '#060521',
-           gutterForeground: '#E0E0E090',
-           lineHighlight: '#FFFFFF0F',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#AEAEAE',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace), tags$1.regexp],
-               color: '#8DFF8E',
-           },
-           {
-               tag: [
-                   tags$1.className,
-                   tags$1.definition(tags$1.propertyName),
-                   tags$1.function(tags$1.variableName),
-                   tags$1.function(tags$1.definition(tags$1.variableName)),
-                   tags$1.definition(tags$1.typeName),
-               ],
-               color: '#A3EBFF',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#62E9BD',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator],
-               color: '#2BF1DC',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#F8FBB1',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.self],
-               color: '#B683CA',
-           },
-           {
-               tag: [tags$1.angleBracket, tags$1.tagName, tags$1.typeName, tags$1.propertyName],
-               color: '#60A4F1',
-           },
-           {
-               tag: tags$1.derefOperator,
-               color: '#E0E0E0',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#7BACCA',
-           },
-       ],
-   });
-
-   // Author: Zeno Rocha
-   const dracula = createTheme({
-       variant: 'dark',
-       settings: {
-           background: '#2d2f3f',
-           foreground: '#f8f8f2',
-           caret: '#f8f8f0',
-           selection: '#44475a',
-           gutterBackground: '#282a36',
-           gutterForeground: 'rgb(144, 145, 148)',
-           lineHighlight: '#44475a',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#6272a4',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace)],
-               color: '#f1fa8c',
-           },
-           {
-               tag: [tags$1.number, tags$1.self, tags$1.bool, tags$1.null],
-               color: '#bd93f9',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator],
-               color: '#ff79c6',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.typeName],
-               color: '#8be9fd',
-           },
-           {
-               tag: tags$1.definition(tags$1.typeName),
-               color: '#f8f8f2',
-           },
-           {
-               tag: [
-                   tags$1.className,
-                   tags$1.definition(tags$1.propertyName),
-                   tags$1.function(tags$1.variableName),
-                   tags$1.attributeName,
-               ],
-               color: '#50fa7b',
-           },
-       ],
-   });
-
-   // Author: TextMate
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#FFFFFF',
-           foreground: '#000000',
-           caret: '#000000',
-           selection: '#80C7FF',
-           gutterBackground: '#FFFFFF',
-           gutterForeground: '#00000070',
-           lineHighlight: '#C1E2F8',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#AAAAAA',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator, tags$1.typeName, tags$1.tagName, tags$1.propertyName],
-               color: '#2F6F9F',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.attributeName, tags$1.definition(tags$1.propertyName)],
-               color: '#4F9FD0',
-           },
-           {
-               tag: [tags$1.className, tags$1.string, tags$1.special(tags$1.brace)],
-               color: '#CF4F5F',
-           },
-           {
-               tag: tags$1.number,
-               color: '#CF4F5F',
-               fontWeight: 'bold',
-           },
-           {
-               tag: tags$1.variableName,
-               fontWeight: 'bold',
-           },
-       ],
-   });
-
-   // Author: Liviu Schera
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#f2f1f8',
-           foreground: '#0c006b',
-           caret: '#5c49e9',
-           selection: '#d5d1f2',
-           gutterBackground: '#f2f1f8',
-           gutterForeground: '#0c006b70',
-           lineHighlight: '#e1def3',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#9995b7',
-           },
-           {
-               tag: tags$1.keyword,
-               color: '#ff5792',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#ff5792',
-           },
-           {
-               tag: [tags$1.className, tags$1.tagName, tags$1.definition(tags$1.typeName)],
-               color: '#0094f0',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null, tags$1.special(tags$1.brace)],
-               color: '#5842ff',
-           },
-           {
-               tag: [tags$1.definition(tags$1.propertyName), tags$1.function(tags$1.variableName)],
-               color: '#0095a8',
-           },
-           {
-               tag: tags$1.typeName,
-               color: '#b3694d',
-           },
-           {
-               tag: [tags$1.propertyName, tags$1.variableName],
-               color: '#fa8900',
-           },
-           {
-               tag: tags$1.operator,
-               color: '#ff5792',
-           },
-           {
-               tag: tags$1.self,
-               color: '#e64100',
-           },
-           {
-               tag: [tags$1.string, tags$1.regexp],
-               color: '#00b368',
-           },
-           {
-               tag: [tags$1.paren, tags$1.bracket],
-               color: '#0431fa',
-           },
-           {
-               tag: tags$1.labelName,
-               color: '#00bdd6',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#e64100',
-           },
-           {
-               tag: tags$1.angleBracket,
-               color: '#9995b7',
-           },
-       ],
-   });
-
-   // Author: Rosé Pine
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#faf4ed',
-           foreground: '#575279',
-           caret: '#575279',
-           selection: '#6e6a8614',
-           gutterBackground: '#faf4ed',
-           gutterForeground: '#57527970',
-           lineHighlight: '#6e6a860d',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#9893a5',
-           },
-           {
-               tag: [tags$1.bool, tags$1.null],
-               color: '#286983',
-           },
-           {
-               tag: tags$1.number,
-               color: '#d7827e',
-           },
-           {
-               tag: tags$1.className,
-               color: '#d7827e',
-           },
-           {
-               tag: [tags$1.angleBracket, tags$1.tagName, tags$1.typeName],
-               color: '#56949f',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#907aa9',
-           },
-           {
-               tag: tags$1.punctuation,
-               color: '#797593',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.modifier],
-               color: '#286983',
-           },
-           {
-               tag: [tags$1.string, tags$1.regexp],
-               color: '#ea9d34',
-           },
-           {
-               tag: tags$1.variableName,
-               color: '#d7827e',
-           },
-       ],
-   });
-
-   // Author: Kenneth Reitz
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#FFFFFF',
-           foreground: '#000000',
-           caret: '#000000',
-           selection: '#FFFD0054',
-           gutterBackground: '#FFFFFF',
-           gutterForeground: '#00000070',
-           lineHighlight: '#00000008',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#CFCFCF',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#E66C29',
-           },
-           {
-               tag: [
-                   tags$1.className,
-                   tags$1.definition(tags$1.propertyName),
-                   tags$1.function(tags$1.variableName),
-                   tags$1.labelName,
-                   tags$1.definition(tags$1.typeName),
-               ],
-               color: '#2EB43B',
-           },
-           {
-               tag: tags$1.keyword,
-               color: '#D8B229',
-           },
-           {
-               tag: tags$1.operator,
-               color: '#4EA44E',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#925A47',
-           },
-           {
-               tag: tags$1.string,
-               color: '#704D3D',
-           },
-           {
-               tag: tags$1.typeName,
-               color: '#2F8996',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.propertyName],
-               color: '#77ACB0',
-           },
-           {
-               tag: tags$1.self,
-               color: '#77ACB0',
-               fontWeight: 'bold',
-           },
-           {
-               tag: tags$1.regexp,
-               color: '#E3965E',
-           },
-           {
-               tag: [tags$1.tagName, tags$1.angleBracket],
-               color: '#BAA827',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#B06520',
-           },
-           {
-               tag: tags$1.derefOperator,
-               color: '#000',
-           },
-       ],
-   });
-
-   // Author: Ethan Schoonover
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#fef7e5',
-           foreground: '#586E75',
-           caret: '#000000',
-           selection: '#073642',
-           gutterBackground: '#fef7e5',
-           gutterForeground: '#586E7580',
-           lineHighlight: '#EEE8D5',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#93A1A1',
-           },
-           {
-               tag: tags$1.string,
-               color: '#2AA198',
-           },
-           {
-               tag: tags$1.regexp,
-               color: '#D30102',
-           },
-           {
-               tag: tags$1.number,
-               color: '#D33682',
-           },
-           {
-               tag: tags$1.variableName,
-               color: '#268BD2',
-           },
-           {
-               tag: [tags$1.keyword, tags$1.operator, tags$1.punctuation],
-               color: '#859900',
-           },
-           {
-               tag: [tags$1.definitionKeyword, tags$1.modifier],
-               color: '#073642',
-               fontWeight: 'bold',
-           },
-           {
-               tag: [tags$1.className, tags$1.self, tags$1.definition(tags$1.propertyName)],
-               color: '#268BD2',
-           },
-           {
-               tag: tags$1.function(tags$1.variableName),
-               color: '#268BD2',
-           },
-           {
-               tag: [tags$1.bool, tags$1.null],
-               color: '#B58900',
-           },
-           {
-               tag: tags$1.tagName,
-               color: '#268BD2',
-               fontWeight: 'bold',
-           },
-           {
-               tag: tags$1.angleBracket,
-               color: '#93A1A1',
-           },
-           {
-               tag: tags$1.attributeName,
-               color: '#93A1A1',
-           },
-           {
-               tag: tags$1.typeName,
-               color: '#859900',
-           },
-       ],
-   });
-
-   // Author: Chris Kempson
-   createTheme({
-       variant: 'light',
-       settings: {
-           background: '#FFFFFF',
-           foreground: '#4D4D4C',
-           caret: '#AEAFAD',
-           selection: '#D6D6D6',
-           gutterBackground: '#FFFFFF',
-           gutterForeground: '#4D4D4C80',
-           lineHighlight: '#EFEFEF',
-       },
-       styles: [
-           {
-               tag: tags$1.comment,
-               color: '#8E908C',
-           },
-           {
-               tag: [tags$1.variableName, tags$1.self, tags$1.propertyName, tags$1.attributeName, tags$1.regexp],
-               color: '#C82829',
-           },
-           {
-               tag: [tags$1.number, tags$1.bool, tags$1.null],
-               color: '#F5871F',
-           },
-           {
-               tag: [tags$1.className, tags$1.typeName, tags$1.definition(tags$1.typeName)],
-               color: '#C99E00',
-           },
-           {
-               tag: [tags$1.string, tags$1.special(tags$1.brace)],
-               color: '#718C00',
-           },
-           {
-               tag: tags$1.operator,
-               color: '#3E999F',
-           },
-           {
-               tag: [tags$1.definition(tags$1.propertyName), tags$1.function(tags$1.variableName)],
-               color: '#4271AE',
-           },
-           {
-               tag: tags$1.keyword,
-               color: '#8959A8',
-           },
-           {
-               tag: tags$1.derefOperator,
-               color: '#4D4D4C',
-           },
-       ],
-   });
-
-   const base00$5 = '#2E3235', base01$5 = '#DDDDDD', base02$5 = '#B9D2FF', base03$5 = '#b0b0b0', base05$4 = '#e0e0e0', base06$4 = '#808080', base07$4 = '#000000', base08$2 = '#A54543', base09$2 = '#fc6d24', base0A$2 = '#fda331', base0B = '#8abeb7', base0C$2 = '#b5bd68', base0D$2 = '#6fb3d2', base0E$2 = '#cc99cc', base0F$2 = '#6987AF';
-   const invalid$7 = base09$2, darkBackground$7 = '#292d30', highlightBackground$7 = base02$5 + '30', background$7 = base00$5, tooltipBackground$7 = base01$5, selection$7 = '#202325', cursor$7 = base01$5;
-   /**
-   The editor theme styles for Basic Dark.
-   */
-   const basicDarkTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base01$5,
-           backgroundColor: background$7
-       },
-       '.cm-content': {
-           caretColor: cursor$7
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$7 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$7 },
-       '.cm-panels': { backgroundColor: darkBackground$7, color: base03$5 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: base02$5,
-           outline: `1px solid ${base03$5}`,
-           color: base07$4
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: base05$4,
-           color: base07$4
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$7 },
-       '.cm-selectionMatch': { backgroundColor: highlightBackground$7 },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${base03$5}`
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           backgroundColor: base02$5,
-           color: base07$4
-       },
-       '.cm-gutters': {
-           borderRight: `1px solid #ffffff10`,
-           color: base06$4,
-           backgroundColor: darkBackground$7
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$7
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: base02$5
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$7
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$7,
-           borderBottomColor: tooltipBackground$7
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$7,
-               color: base03$5
-           }
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$a.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$a.dropdownBorder}`,
+       backgroundColor: config$a.dropdownBackground,
+       color: config$a.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$a.foreground,
+       borderBottomColor: config$a.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$a.selection,
+         color: config$a.foreground,
        }
-   }, { dark: true });
-   /**
-   The highlighting style for code in the Basic Light theme.
-   */
-   const basicDarkHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base0A$2 },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: base0C$2
-       },
-       { tag: [tags$1.variableName], color: base0D$2 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base0A$2 },
-       { tag: [tags$1.labelName], color: base09$2 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base0A$2
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base0E$2 },
-       { tag: [tags$1.brace], color: base0E$2 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$7
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base0A$2
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base0D$2
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base0E$2
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base0A$2
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base0E$2
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base0E$2
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base0D$2
-       },
-       {
-           tag: [tags$1.regexp],
-           color: base0A$2
-       },
-       {
-           tag: [tags$1.quote],
-           color: base01$5
-       },
-       { tag: [tags$1.string], color: base0C$2 },
-       {
-           tag: tags$1.link,
-           color: base0F$2,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base0B
-       },
-       { tag: [tags$1.meta], color: base08$2 },
-       { tag: [tags$1.comment], color: base06$4, fontStyle: 'italic' },
-       { tag: tags$1.monospace, color: base01$5 },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base0A$2 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base0D$2 },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base01$5 },
-       { tag: /*@__PURE__*/tags$1.special(tags$1.heading1), fontWeight: 'bold', color: base01$5 },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base01$5 },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base01$5
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base01$5
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base0B },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: base0B
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base0D$2
-       },
-       { tag: tags$1.invalid, color: base02$5, borderBottom: `1px dotted ${invalid$7}` }
+     }
+   }, {dark: config$a.dark});
+
+   const materialLightHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$a.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$a.variable},
+     {tag: [tags$1.propertyName], color: config$a.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$a.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$a.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$a.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$a.variable},
+     {tag: [tags$1.className], color: config$a.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$a.number},
+     {tag: [tags$1.typeName], color: config$a.type, fontStyle: config$a.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$a.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$a.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$a.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$a.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$a.variable},
+     {tag: tags$1.invalid, color: config$a.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
    ]);
-   /**
-   Extension to enable the Basic Dark theme (both the editor theme and
-   the highlight style).
-   */
-   const basicDark = [
-       basicDarkTheme,
-       /*@__PURE__*/syntaxHighlighting(basicDarkHighlightStyle)
+
+   const materialLight = [
+     materialLightTheme,
+     syntaxHighlighting(materialLightHighlightStyle),
    ];
 
-   // Colors from https://www.nordtheme.com/docs/colors-and-palettes
-   // Polar Night
-   const base00$4 = '#2e3440', // black
-   base01$4 = '#3b4252', // dark grey
-   base02$4 = '#434c5e', base03$4 = '#4c566a'; // grey
-   // Snow Storm
-   const base05$3 = '#e5e9f0', // off white
-   base06$3 = '#eceff4'; // white
-   // Frost
-   const base07$3 = '#8fbcbb', // moss green
-   base08$1 = '#88c0d0', // ice blue
-   base09$1 = '#81a1c1', // water blue
-   base0A$1 = '#5e81ac'; // deep blue
-   // Aurora
-   const base0b$1 = '#bf616a', // red
-   base0C$1 = '#d08770', // orange
-   base0D$1 = '#ebcb8b', // yellow
-   base0E$1 = '#a3be8c', // green
-   base0F$1 = '#b48ead'; // purple
-   const invalid$6 = '#d30102', darkBackground$6 = base06$3, highlightBackground$6 = darkBackground$6, background$6 = '#ffffff', tooltipBackground$6 = base01$4, selection$6 = darkBackground$6, cursor$6 = base01$4;
-   /**
-   The editor theme styles for Basic Light.
-   */
-   const basicLightTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base00$4,
-           backgroundColor: background$6
-       },
-       '.cm-content': {
-           caretColor: cursor$6
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$6 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$6 },
-       '.cm-panels': { backgroundColor: darkBackground$6, color: base03$4 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: '#72a1ff59',
-           outline: `1px solid ${base03$4}`
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: base05$3
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$6 },
-       '.cm-selectionMatch': { backgroundColor: base05$3 },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${base03$4}`
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           backgroundColor: base06$3
-       },
-       '.cm-gutters': {
-           backgroundColor: base06$3,
-           color: base00$4,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$6
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$6
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$6,
-           borderBottomColor: tooltipBackground$6
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$6,
-               color: base03$4
-           }
-       }
-   }, { dark: false });
-   /**
-   The highlighting style for code in the Basic Light theme.
-   */
-   const basicLightHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base0A$1 },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: base0C$1
-       },
-       { tag: [tags$1.variableName], color: base0C$1 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base0A$1 },
-       { tag: [tags$1.labelName], color: base09$1 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base0A$1
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base0E$1 },
-       { tag: [tags$1.brace], color: base07$3 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$6
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base08$1
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base0D$1
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base0E$1
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base0F$1
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base0b$1
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base0C$1
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base0D$1
-       },
-       {
-           tag: [tags$1.regexp],
-           color: base0A$1
-       },
-       {
-           tag: [tags$1.quote],
-           color: base01$4
-       },
-       { tag: [tags$1.string], color: base0C$1 },
-       {
-           tag: tags$1.link,
-           color: base07$3,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base0C$1
-       },
-       { tag: [tags$1.meta], color: base08$1 },
-       { tag: [tags$1.comment], color: base02$4, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base0A$1 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base0A$1 },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base0A$1 },
-       { tag: /*@__PURE__*/tags$1.special(tags$1.heading1), fontWeight: 'bold', color: base0A$1 },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base0A$1 },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base0A$1
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base0A$1
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base0C$1 },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: base07$3
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base0D$1
-       },
-       { tag: tags$1.invalid, color: base02$4, borderBottom: `1px dotted ${invalid$6}` }
-   ]);
-   /**
-   Extension to enable the Basic Light theme (both the editor theme and
-   the highlight style).
-   */
-   const basicLight = [
-       basicLightTheme,
-       /*@__PURE__*/syntaxHighlighting(basicLightHighlightStyle)
-   ];
+   const config$9 = {
+     name: 'materialDark',
+     dark: true,
+     background: '#263238',
+     foreground: '#EEFFFF',
+     selection: '#80CBC420',
+     cursor: '#FFCC00',
+     dropdownBackground: '#263238',
+     dropdownBorder: '#FFFFFF10',
+     activeLine: '#00000050',
+     matchingBracket: '#263238',
+     keyword: '#89DDFF',
+     storage: '#89DDFF',
+     variable: '#EEFFFF',
+     parameter: '#EEFFFF',
+     function: '#82AAFF',
+     string: '#C3E88D',
+     constant: '#89DDFF',
+     type: '#FFCB6B',
+     class: '#FFCB6B',
+     number: '#F78C6C',
+     comment: '#546E7A',
+     heading: '#89DDFF',
+     invalid: '#f0717870',
+     regexp: '#C3E88D',
+   };
 
-   const dark0 = '#282828', dark1$1 = '#3c3836', dark3$1 = '#665c54', gray_245 = '#928374', light1$1 = '#ebdbb2', light2 = '#d5c4a1', light3$1 = '#bdae93', light4 = '#a89984', bright_red = '#fb4934', bright_green = '#b8bb26', bright_yellow = '#fabd2f', bright_blue = '#83a598', bright_purple = '#d3869b', bright_aqua = '#8ec07c', bright_orange = '#fe8019';
-   const bg0$1 = dark0, bg1$1 = dark1$1, bg3$1 = dark3$1, gray$1 = gray_245, fg1$1 = light1$1, fg2$1 = light2, fg3$1 = light3$1, fg4$1 = light4, red$1 = bright_red, green$1 = bright_green, yellow$1 = bright_yellow, blue$1 = bright_blue, purple$1 = bright_purple, aqua$1 = bright_aqua, orange$1 = bright_orange;
-   const invalid$5 = red$1, darkBackground$5 = bg1$1, highlightBackground$5 = darkBackground$5, background$5 = bg0$1, tooltipBackground$5 = bg1$1, selection$5 = darkBackground$5, cursor$5 = orange$1;
-   /**
-   The editor theme styles for Gruvbox Dark.
-   */
-   const gruvboxDarkTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: fg1$1,
-           backgroundColor: background$5
-       },
-       '.cm-content': {
-           caretColor: cursor$5
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$5 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$5 },
-       '.cm-panels': { backgroundColor: darkBackground$5, color: fg1$1 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: bg0$1,
-           color: yellow$1,
-           outline: `1px solid ${bg3$1}`
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: bg3$1
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$5 },
-       '.cm-selectionMatch': { backgroundColor: bg3$1 },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${bg3$1}`,
-           fontStyle: 'bold'
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           backgroundColor: bg3$1
-       },
-       '.cm-gutters': {
-           backgroundColor: bg1$1,
-           color: fg3$1,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$5
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$5
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$5,
-           borderBottomColor: tooltipBackground$5
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$5,
-               color: fg2$1
-           }
-       }
-   }, { dark: true });
-   /**
-   The highlighting style for code in the Gruvbox Dark theme.
-   */
-   const gruvboxDarkHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: red$1 },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: aqua$1
-       },
-       { tag: [tags$1.variableName], color: blue$1 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: green$1, fontStyle: 'bold' },
-       { tag: [tags$1.labelName], color: fg1$1 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: purple$1
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: fg1$1 },
-       { tag: [tags$1.brace], color: fg1$1 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$5
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: purple$1
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: yellow$1
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: red$1
-       },
-       {
-           tag: [tags$1.tagName],
-           color: aqua$1,
-           fontStyle: 'bold'
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: orange$1
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: blue$1
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: aqua$1
-       },
-       {
-           tag: [tags$1.regexp],
-           color: aqua$1
-       },
-       {
-           tag: [tags$1.quote],
-           color: gray$1
-       },
-       { tag: [tags$1.string], color: fg1$1 },
-       {
-           tag: tags$1.link,
-           color: fg4$1,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: purple$1
-       },
-       { tag: [tags$1.meta], color: yellow$1 },
-       { tag: [tags$1.comment], color: gray$1, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: orange$1 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: green$1 },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: green$1 },
-       { tag: [tags$1.heading1, tags$1.heading2], fontWeight: 'bold', color: green$1 },
-       {
-           tag: [tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: yellow$1
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: yellow$1
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: purple$1 },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: bright_blue
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: red$1
-       },
-       { tag: tags$1.invalid, color: orange$1, borderBottom: `1px dotted ${invalid$5}` }
-   ]);
-   /**
-   Extension to enable the Gruvbox Dark theme (both the editor theme and
-   the highlight style).
-   */
-   const gruvboxDark = [
-       gruvboxDarkTheme,
-       /*@__PURE__*/syntaxHighlighting(gruvboxDarkHighlightStyle)
-   ];
+   const materialDarkTheme = EditorView.theme({
+     '&': {
+       color: config$9.foreground,
+       backgroundColor: config$9.background,
+     },
 
-   const dark1 = '#3c3836', dark2 = '#504945', dark3 = '#665c54', dark4 = '#7c6f64', gray_244 = '#928374', light0 = '#fbf1c7', light1 = '#ebdbb2', light3 = '#bdae93', faded_red = '#9d0006', faded_green = '#79740e', faded_yellow = '#b57614', faded_blue = '#076678', faded_purple = '#8f3f71', faded_aqua = '#427b58', faded_orange = '#af3a03';
-   const bg0 = light0, bg1 = light1, bg3 = light3, gray = gray_244, fg1 = dark1, fg2 = dark2, fg3 = dark3, fg4 = dark4, red = faded_red, green = faded_green, yellow = faded_yellow, blue = faded_blue, purple = faded_purple, aqua = faded_aqua, orange = faded_orange;
-   const invalid$4 = red, darkBackground$4 = bg1, highlightBackground$4 = darkBackground$4, background$4 = bg0, tooltipBackground$4 = bg1, selection$4 = darkBackground$4, cursor$4 = orange;
-   /**
-   The editor theme styles for Gruvbox Light.
-   */
-   const gruvboxLightTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: fg1,
-           backgroundColor: background$4
-       },
-       '.cm-content': {
-           caretColor: cursor$4
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$4 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$4 },
-       '.cm-panels': { backgroundColor: darkBackground$4, color: fg1 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: bg0,
-           color: yellow,
-           outline: `1px solid ${bg3}`
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: bg3
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$4 },
-       '.cm-selectionMatch': { backgroundColor: bg3 },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${bg3}`,
-           fontStyle: 'bold'
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           backgroundColor: bg3
-       },
-       '.cm-gutters': {
-           backgroundColor: bg1,
-           color: fg3,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$4
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$4
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$4,
-           borderBottomColor: tooltipBackground$4
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$4,
-               color: fg2
-           }
-       }
-   }, { dark: false });
-   /**
-   The highlighting style for code in the Gruvbox Light theme.
-   */
-   const gruvboxLightHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: red },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: aqua
-       },
-       { tag: [tags$1.variableName], color: blue },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: green, fontStyle: 'bold' },
-       { tag: [tags$1.labelName], color: fg1 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: purple
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: fg1 },
-       { tag: [tags$1.brace], color: fg1 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$4
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: purple
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: yellow
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: red
-       },
-       {
-           tag: [tags$1.tagName],
-           color: aqua,
-           fontStyle: 'bold'
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: orange
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: blue
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: aqua
-       },
-       {
-           tag: [tags$1.regexp],
-           color: aqua
-       },
-       {
-           tag: [tags$1.quote],
-           color: gray
-       },
-       { tag: [tags$1.string], color: fg1 },
-       {
-           tag: tags$1.link,
-           color: fg4,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: purple
-       },
-       { tag: [tags$1.meta], color: yellow },
-       { tag: [tags$1.comment], color: gray, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: orange },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: green },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: green },
-       { tag: [tags$1.heading1, tags$1.heading2], fontWeight: 'bold', color: green },
-       {
-           tag: [tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: yellow
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: yellow
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: purple },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: blue
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: red
-       },
-       { tag: tags$1.invalid, color: orange, borderBottom: `1px dotted ${invalid$4}` }
-   ]);
-   /**
-   Extension to enable the Gruvbox Light theme (both the editor theme and
-   the highlight style).
-   */
-   const gruvboxLight = [
-       gruvboxLightTheme,
-       /*@__PURE__*/syntaxHighlighting(gruvboxLightHighlightStyle)
-   ];
+     '.cm-content': {caretColor: config$9.cursor},
 
-   const base00$3 = '#2e3235', base01$3 = '#505d64', base02$3 = '#606f7a', base03$3 = '#707d8b', base04$2 = '#a0a4ae', base05$2 = '#bdbdbd', base06$2 = '#e0e0e0', base07$2 = '#fdf6e3', base_red$2 = '#ff5f52', base_deeporange = '#ff6e40', base_pink = '#fa5788', base_yellow$2 = '#facf4e', base_orange$2 = '#ffad42', base_cyan$2 = '#56c8d8', base_indigo = '#7186f0', base_purple = '#cf6edf', base_green$2 = '#6abf69', base_lightgreen = '#99d066', base_teal = '#4ebaaa';
-   const invalid$3 = base_red$2, darkBackground$3 = '#202325', highlightBackground$3 = '#545b61', background$3 = base00$3, tooltipBackground$3 = base01$3, selection$3 = base01$3, cursor$3 = base04$2;
-   /**
-   The editor theme styles for Material Dark.
-   */
-   const materialDarkTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base05$2,
-           backgroundColor: background$3
-       },
-       '.cm-content': {
-           caretColor: cursor$3
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$3 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$3 },
-       '.cm-panels': { backgroundColor: darkBackground$3, color: base03$3 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           outline: `1px solid ${base_yellow$2}`,
-           backgroundColor: 'transparent'
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: highlightBackground$3
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$3 },
-       '.cm-selectionMatch': {
-           backgroundColor: darkBackground$3,
-           outline: `1px solid ${base_teal}`
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           color: base06$2,
-           outline: `1px solid ${base_teal}`
-       },
-       '&.cm-focused .cm-nonmatchingBracket': {
-           color: base_red$2
-       },
-       '.cm-gutters': {
-           backgroundColor: base00$3,
-           borderRight: '1px solid #4f5b66',
-           color: base02$3
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$3,
-           color: base07$2
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$3
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$3,
-           borderBottomColor: tooltipBackground$3
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$3,
-               color: base03$3
-           }
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$9.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$9.selection},
+
+     '.cm-panels': {backgroundColor: config$9.dropdownBackground, color: config$9.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$9.dropdownBackground,
+       outline: `1px solid ${config$9.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$9.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$9.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$9.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$9.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$9.background,
+       color: config$9.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$9.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$9.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$9.dropdownBorder}`,
+       backgroundColor: config$9.dropdownBackground,
+       color: config$9.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$9.foreground,
+       borderBottomColor: config$9.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$9.selection,
+         color: config$9.foreground,
        }
-   }, { dark: true });
-   /**
-   The highlighting style for code in the Material Dark theme.
-   */
-   const materialDarkHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base_purple },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName],
-           color: base_cyan$2
-       },
-       { tag: [tags$1.propertyName], color: base_yellow$2 },
-       { tag: [tags$1.variableName], color: base05$2 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base_cyan$2 },
-       { tag: [tags$1.labelName], color: base_purple },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base_yellow$2
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base_pink },
-       { tag: [tags$1.brace], color: base_purple },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$3
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base_orange$2
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base_orange$2
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base_indigo
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base_deeporange
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base_red$2
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base02$3
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base05$2
-       },
-       {
-           tag: [tags$1.regexp],
-           color: invalid$3
-       },
-       {
-           tag: [tags$1.quote],
-           color: base_green$2
-       },
-       { tag: [tags$1.string], color: base_lightgreen },
-       {
-           tag: tags$1.link,
-           color: base_cyan$2,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base_yellow$2
-       },
-       { tag: [tags$1.meta], color: base03$3 },
-       { tag: [tags$1.comment], color: base03$3, fontStyle: 'italic' },
-       { tag: tags$1.monospace, color: base05$2 },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base_red$2 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base_lightgreen },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base_yellow$2 },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base_yellow$2 },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base_yellow$2
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base_yellow$2
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base_cyan$2 },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: base_red$2
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base_cyan$2
-       },
-       { tag: tags$1.invalid, color: base02$3, borderBottom: `1px dotted ${base_red$2}` }
+     }
+   }, {dark: config$9.dark});
+
+   const materialDarkHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$9.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$9.variable},
+     {tag: [tags$1.propertyName], color: config$9.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$9.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$9.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$9.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$9.variable},
+     {tag: [tags$1.className], color: config$9.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$9.number},
+     {tag: [tags$1.typeName], color: config$9.type, fontStyle: config$9.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$9.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$9.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$9.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$9.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$9.variable},
+     {tag: tags$1.invalid, color: config$9.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
    ]);
-   /**
-   Extension to enable the Material Dark theme (both the editor theme and
-   the highlight style).
-   */
+
    const materialDark = [
-       materialDarkTheme,
-       /*@__PURE__*/syntaxHighlighting(materialDarkHighlightStyle)
+     materialDarkTheme,
+     syntaxHighlighting(materialDarkHighlightStyle),
    ];
 
-   // Colors from https://www.nordtheme.com/docs/colors-and-palettes
-   // Polar Night
-   const base00$2 = '#2e3440', // black
-   base01$2 = '#3b4252', // dark grey
-   base02$2 = '#434c5e', base03$2 = '#4c566a'; // grey
-   // Snow Storm
-   const base04$1 = '#d8dee9', // grey
-   base05$1 = '#e5e9f0', // off white
-   base06$1 = '#eceff4'; // white
-   // Frost
-   const base07$1 = '#8fbcbb', // moss green
-   base08 = '#88c0d0', // ice blue
-   base09 = '#81a1c1', // water blue
-   base0A = '#5e81ac'; // deep blue
-   // Aurora
-   const base0b = '#bf616a', // red
-   base0C = '#d08770', // orange
-   base0D = '#ebcb8b', // yellow
-   base0E = '#a3be8c', // green
-   base0F = '#b48ead'; // purple
-   const invalid$2 = '#d30102', darkBackground$2 = '#252a33', highlightBackground$2 = base03$2, background$2 = base00$2, tooltipBackground$2 = base01$2, selection$2 = base03$2, cursor$2 = base04$1;
-   /**
-   The editor theme styles for Nord.
-   */
-   const nordTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base04$1,
-           backgroundColor: background$2
-       },
-       '.cm-content': {
-           caretColor: cursor$2
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$2 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$2 },
-       '.cm-panels': { backgroundColor: darkBackground$2, color: base03$2 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: 'transparent',
-           outline: `1px solid ${base07$1}`
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: base04$1,
-           color: base00$2
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$2 },
-       '.cm-selectionMatch': {
-           backgroundColor: base05$1,
-           color: base01$2
-       },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${base07$1}`
-       },
-       '&.cm-focused .cm-matchingBracket': {
-           backgroundColor: base06$1,
-           color: base02$2
-       },
-       '.cm-gutters': {
-           backgroundColor: base00$2,
-           color: base03$2,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$2,
-           color: base04$1
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$2
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$2,
-           borderBottomColor: tooltipBackground$2
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$2,
-               color: base03$2
-           }
-       }
-   }, { dark: true });
-   /**
-   The highlighting style for code in the Nord theme.
-   */
-   const nordHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base0A },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: base08
-       },
-       { tag: [tags$1.variableName], color: base07$1 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base07$1 },
-       { tag: [tags$1.labelName], color: base09 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base0A
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base0E },
-       { tag: [tags$1.brace], color: base07$1 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$2
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base0F
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base0D
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base0E
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base0F
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base0b
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base0C
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base0D
-       },
-       {
-           tag: [tags$1.regexp],
-           color: base0A
-       },
-       {
-           tag: [tags$1.quote],
-           color: base0F
-       },
-       { tag: [tags$1.string], color: base0E },
-       {
-           tag: tags$1.link,
-           color: base0E,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base07$1
-       },
-       { tag: [tags$1.meta], color: base08 },
-       { tag: [tags$1.monospace], color: base04$1, fontStyle: 'italic' },
-       { tag: [tags$1.comment], color: base03$2, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base0A },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base0A },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base0A },
-       { tag: /*@__PURE__*/tags$1.special(tags$1.heading1), fontWeight: 'bold', color: base0A },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base0A },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base0A
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base0A
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base0C },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted],
-           color: base07$1
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base0D
-       },
-       { tag: tags$1.invalid, color: base02$2, borderBottom: `1px dotted ${invalid$2}` }
-   ]);
-   /**
-   Extension to enable the Nord theme (both the editor theme and
-   the highlight style).
-   */
-   const nord = [
-       nordTheme,
-       /*@__PURE__*/syntaxHighlighting(nordHighlightStyle)
-   ];
+   const config$8 = {
+     name: 'solarizedLight',
+     dark: false,
+     background: '#fdf6e3',
+     foreground: '#586e75',
+     selection: '#eee8d5',
+     cursor: '#657b83',
+     dropdownBackground: '#fdf6e3',
+     dropdownBorder: '#d3af86',
+     activeLine: '#eee8d5',
+     matchingBracket: '#eee8d5',
+     keyword: '#859900',
+     storage: '#073642',
+     variable: '#657b83',
+     parameter: '#657b83',
+     function: '#268BD2',
+     string: '#2AA198',
+     constant: '#CB4B16',
+     type: '#b58900',
+     class: '#268BD2',
+     number: '#D33682',
+     comment: '#93A1A1',
+     heading: '#268BD2',
+     invalid: '#586e75',
+     regexp: '#D30102',
+   };
 
-   const base00$1 = '#002b36', base01$1 = '#073642', base02$1 = '#586e75', base03$1 = '#657b83', base04 = '#839496', base05 = '#93a1a1', base06 = '#eee8d5', base07 = '#fdf6e3', base_red$1 = '#dc322f', base_orange$1 = '#cb4b16', base_yellow$1 = '#b58900', base_green$1 = '#859900', base_cyan$1 = '#2aa198', base_blue$1 = '#268bd2', base_violet$1 = '#6c71c4', base_magenta$1 = '#d33682';
-   const invalid$1 = '#d30102', stone = base04, darkBackground$1 = '#00252f', highlightBackground$1 = '#173541', background$1 = base00$1, tooltipBackground$1 = base01$1, selection$1 = '#173541', cursor$1 = base04;
-   /**
-   The editor theme styles for Solarized Dark.
-   */
-   const solarizedDarkTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base05,
-           backgroundColor: background$1
-       },
-       '.cm-content': {
-           caretColor: cursor$1
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor$1 },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection$1 },
-       '.cm-panels': { backgroundColor: darkBackground$1, color: base03$1 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: '#72a1ff59',
-           outline: '1px solid #457dff'
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: '#6199ff2f'
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground$1 },
-       '.cm-selectionMatch': { backgroundColor: '#aafe661a' },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${base06}`
-       },
-       '.cm-gutters': {
-           backgroundColor: darkBackground$1,
-           color: stone,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground$1
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground$1
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground$1,
-           borderBottomColor: tooltipBackground$1
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground$1,
-               color: base03$1
-           }
-       }
-   }, { dark: true });
-   /**
-   The highlighting style for code in the Solarized Dark theme.
-   */
-   const solarizedDarkHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base_green$1 },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: base_cyan$1
-       },
-       { tag: [tags$1.variableName], color: base05 },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base_blue$1 },
-       { tag: [tags$1.labelName], color: base_magenta$1 },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base_yellow$1
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base_cyan$1 },
-       { tag: [tags$1.brace], color: base_magenta$1 },
-       {
-           tag: [tags$1.annotation],
-           color: invalid$1
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base_magenta$1
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base_orange$1
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base_violet$1
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base_blue$1
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base_red$1
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base02$1
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base05
-       },
-       {
-           tag: [tags$1.regexp],
-           color: invalid$1
-       },
-       {
-           tag: [tags$1.quote],
-           color: base_green$1
-       },
-       { tag: [tags$1.string], color: base_yellow$1 },
-       {
-           tag: tags$1.link,
-           color: base_cyan$1,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base_yellow$1
-       },
-       { tag: [tags$1.meta], color: base_red$1 },
-       { tag: [tags$1.comment], color: base02$1, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base06 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base_green$1 },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base_yellow$1 },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base07 },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base06
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base06
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base_magenta$1 },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted, tags$1.contentSeparator],
-           color: base_red$1
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base_yellow$1
-       },
-       { tag: tags$1.invalid, color: base02$1, borderBottom: `1px dotted ${base_red$1}` }
-   ]);
-   /**
-   Extension to enable the Solarized Dark theme (both the editor theme and
-   the highlight style).
-   */
-   const solarizedDark = [
-       solarizedDarkTheme,
-       /*@__PURE__*/syntaxHighlighting(solarizedDarkHighlightStyle)
-   ];
+   const solarizedLightTheme = EditorView.theme({
+     '&': {
+       color: config$8.foreground,
+       backgroundColor: config$8.background,
+     },
 
-   const base00 = '#657b83', base01 = '#586e75', base02 = '#073642', base03 = '#002b36', base1 = '#93a1a1', base3 = '#fdf6e3', base_red = '#dc322f', base_orange = '#cb4b16', base_yellow = '#b58900', base_green = '#859900', base_cyan = '#2aa198', base_blue = '#268bd2', base_violet = '#6c71c4', base_magenta = '#d33682';
-   const invalid = '#d30102', darkBackground = '#dfd9c8', highlightBackground = darkBackground, background = base3, tooltipBackground = base01, selection = darkBackground, cursor = base01;
-   /**
-   The editor theme styles for Solarized Light.
-   */
-   const solarizedLightTheme = /*@__PURE__*/EditorView.theme({
-       '&': {
-           color: base00,
-           backgroundColor: background
-       },
-       '.cm-content': {
-           caretColor: cursor
-       },
-       '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor },
-       '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': { backgroundColor: selection },
-       '.cm-panels': { backgroundColor: darkBackground, color: base03 },
-       '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
-       '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
-       '.cm-searchMatch': {
-           backgroundColor: '#72a1ff59',
-           outline: '1px solid #457dff'
-       },
-       '.cm-searchMatch.cm-searchMatch-selected': {
-           backgroundColor: '#6199ff2f'
-       },
-       '.cm-activeLine': { backgroundColor: highlightBackground },
-       '.cm-selectionMatch': { backgroundColor: '#aafe661a' },
-       '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
-           outline: `1px solid ${base1}`
-       },
-       '.cm-gutters': {
-           backgroundColor: '#00000010',
-           color: base00,
-           border: 'none'
-       },
-       '.cm-activeLineGutter': {
-           backgroundColor: highlightBackground
-       },
-       '.cm-foldPlaceholder': {
-           backgroundColor: 'transparent',
-           border: 'none',
-           color: '#ddd'
-       },
-       '.cm-tooltip': {
-           border: 'none',
-           backgroundColor: tooltipBackground
-       },
-       '.cm-tooltip .cm-tooltip-arrow:before': {
-           borderTopColor: 'transparent',
-           borderBottomColor: 'transparent'
-       },
-       '.cm-tooltip .cm-tooltip-arrow:after': {
-           borderTopColor: tooltipBackground,
-           borderBottomColor: tooltipBackground
-       },
-       '.cm-tooltip-autocomplete': {
-           '& > ul > li[aria-selected]': {
-               backgroundColor: highlightBackground,
-               color: base03
-           }
+     '.cm-content': {caretColor: config$8.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$8.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$8.selection},
+
+     '.cm-panels': {backgroundColor: config$8.dropdownBackground, color: config$8.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$8.dropdownBackground,
+       outline: `1px solid ${config$8.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$8.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$8.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$8.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$8.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$8.background,
+       color: config$8.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$8.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$8.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$8.dropdownBorder}`,
+       backgroundColor: config$8.dropdownBackground,
+       color: config$8.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$8.foreground,
+       borderBottomColor: config$8.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$8.selection,
+         color: config$8.foreground,
        }
-   }, { dark: false });
-   /**
-   The highlighting style for code in the Solarized Light theme.
-   */
-   const solarizedLightHighlightStyle = /*@__PURE__*/HighlightStyle.define([
-       { tag: tags$1.keyword, color: base_green },
-       {
-           tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.propertyName, tags$1.macroName],
-           color: base_cyan
-       },
-       { tag: [tags$1.variableName], color: base_blue },
-       { tag: [/*@__PURE__*/tags$1.function(tags$1.variableName)], color: base_blue },
-       { tag: [tags$1.labelName], color: base_magenta },
-       {
-           tag: [tags$1.color, /*@__PURE__*/tags$1.constant(tags$1.name), /*@__PURE__*/tags$1.standard(tags$1.name)],
-           color: base_yellow
-       },
-       { tag: [/*@__PURE__*/tags$1.definition(tags$1.name), tags$1.separator], color: base_cyan },
-       { tag: [tags$1.brace], color: base_magenta },
-       {
-           tag: [tags$1.annotation],
-           color: invalid
-       },
-       {
-           tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace],
-           color: base_magenta
-       },
-       {
-           tag: [tags$1.typeName, tags$1.className],
-           color: base_orange
-       },
-       {
-           tag: [tags$1.operator, tags$1.operatorKeyword],
-           color: base_violet
-       },
-       {
-           tag: [tags$1.tagName],
-           color: base_blue
-       },
-       {
-           tag: [tags$1.squareBracket],
-           color: base_red
-       },
-       {
-           tag: [tags$1.angleBracket],
-           color: base02
-       },
-       {
-           tag: [tags$1.attributeName],
-           color: base1
-       },
-       {
-           tag: [tags$1.regexp],
-           color: invalid
-       },
-       {
-           tag: [tags$1.quote],
-           color: base_green
-       },
-       { tag: [tags$1.string], color: base_yellow },
-       {
-           tag: tags$1.link,
-           color: base_cyan,
-           textDecoration: 'underline',
-           textUnderlinePosition: 'under'
-       },
-       {
-           tag: [tags$1.url, tags$1.escape, /*@__PURE__*/tags$1.special(tags$1.string)],
-           color: base_yellow
-       },
-       { tag: [tags$1.meta], color: base_red },
-       { tag: [tags$1.comment], color: base02, fontStyle: 'italic' },
-       { tag: tags$1.strong, fontWeight: 'bold', color: base01 },
-       { tag: tags$1.emphasis, fontStyle: 'italic', color: base_green },
-       { tag: tags$1.strikethrough, textDecoration: 'line-through' },
-       { tag: tags$1.heading, fontWeight: 'bold', color: base_yellow },
-       { tag: tags$1.heading1, fontWeight: 'bold', color: base03 },
-       {
-           tag: [tags$1.heading2, tags$1.heading3, tags$1.heading4],
-           fontWeight: 'bold',
-           color: base03
-       },
-       {
-           tag: [tags$1.heading5, tags$1.heading6],
-           color: base03
-       },
-       { tag: [tags$1.atom, tags$1.bool, /*@__PURE__*/tags$1.special(tags$1.variableName)], color: base_magenta },
-       {
-           tag: [tags$1.processingInstruction, tags$1.inserted, tags$1.contentSeparator],
-           color: base_red
-       },
-       {
-           tag: [tags$1.contentSeparator],
-           color: base_yellow
-       },
-       { tag: tags$1.invalid, color: base02, borderBottom: `1px dotted ${base_red}` }
+     }
+   }, {dark: config$8.dark});
+
+   const solarizedLightHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$8.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$8.variable},
+     {tag: [tags$1.propertyName], color: config$8.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$8.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$8.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$8.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$8.variable},
+     {tag: [tags$1.className], color: config$8.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$8.number},
+     {tag: [tags$1.typeName], color: config$8.type, fontStyle: config$8.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$8.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$8.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$8.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$8.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$8.variable},
+     {tag: tags$1.invalid, color: config$8.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
    ]);
-   /**
-   Extension to enable the Solarized Light theme (both the editor theme and
-   the highlight style).
-   */
+
    const solarizedLight = [
-       solarizedLightTheme,
-       /*@__PURE__*/syntaxHighlighting(solarizedLightHighlightStyle)
+     solarizedLightTheme,
+     syntaxHighlighting(solarizedLightHighlightStyle),
+   ];
+
+   const config$7 = {
+     name: 'solarizedDark',
+     dark: true,
+     background: '#002b36',
+     foreground: '#93a1a1',
+     selection: '#073642',
+     cursor: '#839496',
+     dropdownBackground: '#002b36',
+     dropdownBorder: '#2aa19899',
+     activeLine: '#073642',
+     matchingBracket: '#073642',
+     keyword: '#859900',
+     storage: '#93A1A1',
+     variable: '#839496',
+     parameter: '#839496',
+     function: '#268BD2',
+     string: '#2AA198',
+     constant: '#CB4B16',
+     type: '#b58900',
+     class: '#CB4B16',
+     number: '#D33682',
+     comment: '#657B83',
+     heading: '#268BD2',
+     invalid: '#ffeaea',
+     regexp: '#D30102',
+   };
+
+   const solarizedDarkTheme = EditorView.theme({
+     '&': {
+       color: config$7.foreground,
+       backgroundColor: config$7.background,
+     },
+
+     '.cm-content': {caretColor: config$7.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$7.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$7.selection},
+
+     '.cm-panels': {backgroundColor: config$7.dropdownBackground, color: config$7.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$7.dropdownBackground,
+       outline: `1px solid ${config$7.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$7.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$7.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$7.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$7.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$7.background,
+       color: config$7.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$7.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$7.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$7.dropdownBorder}`,
+       backgroundColor: config$7.dropdownBackground,
+       color: config$7.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$7.foreground,
+       borderBottomColor: config$7.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$7.selection,
+         color: config$7.foreground,
+       }
+     }
+   }, {dark: config$7.dark});
+
+   const solarizedDarkHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$7.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$7.variable},
+     {tag: [tags$1.propertyName], color: config$7.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$7.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$7.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$7.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$7.variable},
+     {tag: [tags$1.className], color: config$7.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$7.number},
+     {tag: [tags$1.typeName], color: config$7.type, fontStyle: config$7.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$7.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$7.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$7.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$7.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$7.variable},
+     {tag: tags$1.invalid, color: config$7.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const solarizedDark = [
+     solarizedDarkTheme,
+     syntaxHighlighting(solarizedDarkHighlightStyle),
+   ];
+
+   const config$6 = {
+     name: 'dracula',
+     dark: true,
+     background: '#282A36',
+     foreground: '#F8F8F2',
+     selection: '#44475A',
+     cursor: '#F8F8F2',
+     dropdownBackground: '#282A36',
+     dropdownBorder: '#191A21',
+     activeLine: '#282A36',
+     matchingBracket: '#44475A',
+     keyword: '#FF79C6',
+     storage: '#FF79C6',
+     variable: '#F8F8F2',
+     parameter: '#F8F8F2',
+     function: '#50FA7B',
+     string: '#F1FA8C',
+     constant: '#BD93F9',
+     type: '#8BE9FD',
+     class: '#8BE9FD',
+     number: '#BD93F9',
+     comment: '#6272A4',
+     heading: '#BD93F9',
+     invalid: '#FF5555',
+     regexp: '#F1FA8C',
+   };
+
+   const draculaTheme = EditorView.theme({
+     '&': {
+       color: config$6.foreground,
+       backgroundColor: config$6.background,
+     },
+
+     '.cm-content': {caretColor: config$6.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$6.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$6.selection},
+
+     '.cm-panels': {backgroundColor: config$6.dropdownBackground, color: config$6.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$6.dropdownBackground,
+       outline: `1px solid ${config$6.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$6.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$6.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$6.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$6.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$6.background,
+       color: config$6.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$6.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$6.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$6.dropdownBorder}`,
+       backgroundColor: config$6.dropdownBackground,
+       color: config$6.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$6.foreground,
+       borderBottomColor: config$6.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$6.selection,
+         color: config$6.foreground,
+       }
+     }
+   }, {dark: config$6.dark});
+
+   const draculaHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$6.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$6.variable},
+     {tag: [tags$1.propertyName], color: config$6.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$6.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$6.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$6.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$6.variable},
+     {tag: [tags$1.className], color: config$6.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$6.number},
+     {tag: [tags$1.typeName], color: config$6.type, fontStyle: config$6.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$6.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$6.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$6.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$6.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$6.variable},
+     {tag: tags$1.invalid, color: config$6.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const dracula = [
+     draculaTheme,
+     syntaxHighlighting(draculaHighlightStyle),
+   ];
+
+   const config$5 = {
+     name: 'githubLight',
+     dark: false,
+     background: '#fff',
+     foreground: '#444d56',
+     selection: '#0366d625',
+     cursor: '#044289',
+     dropdownBackground: '#fff',
+     dropdownBorder: '#e1e4e8',
+     activeLine: '#f6f8fa',
+     matchingBracket: '#34d05840',
+     keyword: '#d73a49',
+     storage: '#d73a49',
+     variable: '#e36209',
+     parameter: '#24292e',
+     function: '#005cc5',
+     string: '#032f62',
+     constant: '#005cc5',
+     type: '#005cc5',
+     class: '#6f42c1',
+     number: '#005cc5',
+     comment: '#6a737d',
+     heading: '#005cc5',
+     invalid: '#cb2431',
+     regexp: '#032f62',
+   };
+
+   const githubLightTheme = EditorView.theme({
+     '&': {
+       color: config$5.foreground,
+       backgroundColor: config$5.background,
+     },
+
+     '.cm-content': {caretColor: config$5.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$5.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$5.selection},
+
+     '.cm-panels': {backgroundColor: config$5.dropdownBackground, color: config$5.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$5.dropdownBackground,
+       outline: `1px solid ${config$5.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$5.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$5.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$5.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$5.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$5.background,
+       color: config$5.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$5.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$5.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$5.dropdownBorder}`,
+       backgroundColor: config$5.dropdownBackground,
+       color: config$5.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$5.foreground,
+       borderBottomColor: config$5.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$5.selection,
+         color: config$5.foreground,
+       }
+     }
+   }, {dark: config$5.dark});
+
+   const githubLightHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$5.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$5.variable},
+     {tag: [tags$1.propertyName], color: config$5.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$5.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$5.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$5.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$5.variable},
+     {tag: [tags$1.className], color: config$5.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$5.number},
+     {tag: [tags$1.typeName], color: config$5.type, fontStyle: config$5.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$5.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$5.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$5.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$5.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$5.variable},
+     {tag: tags$1.invalid, color: config$5.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const githubLight = [
+     githubLightTheme,
+     syntaxHighlighting(githubLightHighlightStyle),
+   ];
+
+   const config$4 = {
+     name: 'githubDark',
+     dark: true,
+     background: '#24292e',
+     foreground: '#d1d5da',
+     selection: '#3392FF44',
+     cursor: '#c8e1ff',
+     dropdownBackground: '#24292e',
+     dropdownBorder: '#1b1f23',
+     activeLine: '#2b3036',
+     matchingBracket: '#17E5E650',
+     keyword: '#f97583',
+     storage: '#f97583',
+     variable: '#ffab70',
+     parameter: '#e1e4e8',
+     function: '#79b8ff',
+     string: '#9ecbff',
+     constant: '#79b8ff',
+     type: '#79b8ff',
+     class: '#b392f0',
+     number: '#79b8ff',
+     comment: '#6a737d',
+     heading: '#79b8ff',
+     invalid: '#f97583',
+     regexp: '#9ecbff',
+   };
+
+   const githubDarkTheme = EditorView.theme({
+     '&': {
+       color: config$4.foreground,
+       backgroundColor: config$4.background,
+     },
+
+     '.cm-content': {caretColor: config$4.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$4.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$4.selection},
+
+     '.cm-panels': {backgroundColor: config$4.dropdownBackground, color: config$4.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$4.dropdownBackground,
+       outline: `1px solid ${config$4.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$4.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$4.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$4.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$4.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$4.background,
+       color: config$4.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$4.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$4.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$4.dropdownBorder}`,
+       backgroundColor: config$4.dropdownBackground,
+       color: config$4.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$4.foreground,
+       borderBottomColor: config$4.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$4.selection,
+         color: config$4.foreground,
+       }
+     }
+   }, {dark: config$4.dark});
+
+   const githubDarkHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$4.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$4.variable},
+     {tag: [tags$1.propertyName], color: config$4.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$4.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$4.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$4.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$4.variable},
+     {tag: [tags$1.className], color: config$4.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$4.number},
+     {tag: [tags$1.typeName], color: config$4.type, fontStyle: config$4.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$4.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$4.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$4.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$4.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$4.variable},
+     {tag: tags$1.invalid, color: config$4.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const githubDark = [
+     githubDarkTheme,
+     syntaxHighlighting(githubDarkHighlightStyle),
+   ];
+
+   const config$3 = {
+     name: 'aura',
+     dark: true,
+     background: '#21202e',
+     foreground: '#edecee',
+     selection: '#3d375e7f',
+     cursor: '#a277ff',
+     dropdownBackground: '#21202e',
+     dropdownBorder: '#3b334b',
+     activeLine: '#a394f033',
+     matchingBracket: '#a394f033',
+     keyword: '#a277ff',
+     storage: '#a277ff',
+     variable: '#edecee',
+     parameter: '#edecee',
+     function: '#ffca85',
+     string: '#61ffca',
+     constant: '#61ffca',
+     type: '#82e2ff',
+     class: '#82e2ff',
+     number: '#61ffca',
+     comment: '#6d6d6d',
+     heading: '#a277ff',
+     invalid: '#ff6767',
+     regexp: '#61ffca',
+   };
+
+   const auraTheme = EditorView.theme({
+     '&': {
+       color: config$3.foreground,
+       backgroundColor: config$3.background,
+     },
+
+     '.cm-content': {caretColor: config$3.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$3.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$3.selection},
+
+     '.cm-panels': {backgroundColor: config$3.dropdownBackground, color: config$3.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$3.dropdownBackground,
+       outline: `1px solid ${config$3.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$3.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$3.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$3.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$3.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$3.background,
+       color: config$3.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$3.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$3.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$3.dropdownBorder}`,
+       backgroundColor: config$3.dropdownBackground,
+       color: config$3.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$3.foreground,
+       borderBottomColor: config$3.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$3.selection,
+         color: config$3.foreground,
+       }
+     }
+   }, {dark: config$3.dark});
+
+   const auraHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$3.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$3.variable},
+     {tag: [tags$1.propertyName], color: config$3.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$3.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$3.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$3.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$3.variable},
+     {tag: [tags$1.className], color: config$3.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$3.number},
+     {tag: [tags$1.typeName], color: config$3.type, fontStyle: config$3.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$3.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$3.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$3.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$3.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$3.variable},
+     {tag: tags$1.invalid, color: config$3.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const aura = [
+     auraTheme,
+     syntaxHighlighting(auraHighlightStyle),
+   ];
+
+   const config$2 = {
+     name: 'tokyoNight',
+     dark: true,
+     background: '#1a1b26',
+     foreground: '#787c99',
+     selection: '#515c7e40',
+     cursor: '#c0caf5',
+     dropdownBackground: '#1a1b26',
+     dropdownBorder: '#787c99',
+     activeLine: '#1e202e',
+     matchingBracket: '#16161e',
+     keyword: '#bb9af7',
+     storage: '#bb9af7',
+     variable: '#c0caf5',
+     parameter: '#c0caf5',
+     function: '#7aa2f7',
+     string: '#9ece6a',
+     constant: '#bb9af7',
+     type: '#0db9d7',
+     class: '#c0caf5',
+     number: '#ff9e64',
+     comment: '#444b6a',
+     heading: '#89ddff',
+     invalid: '#ff5370',
+     regexp: '#b4f9f8',
+   };
+
+   const tokyoNightTheme = EditorView.theme({
+     '&': {
+       color: config$2.foreground,
+       backgroundColor: config$2.background,
+     },
+
+     '.cm-content': {caretColor: config$2.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$2.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$2.selection},
+
+     '.cm-panels': {backgroundColor: config$2.dropdownBackground, color: config$2.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$2.dropdownBackground,
+       outline: `1px solid ${config$2.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$2.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$2.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$2.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$2.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$2.background,
+       color: config$2.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$2.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$2.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$2.dropdownBorder}`,
+       backgroundColor: config$2.dropdownBackground,
+       color: config$2.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$2.foreground,
+       borderBottomColor: config$2.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$2.selection,
+         color: config$2.foreground,
+       }
+     }
+   }, {dark: config$2.dark});
+
+   const tokyoNightHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$2.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$2.variable},
+     {tag: [tags$1.propertyName], color: config$2.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$2.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$2.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$2.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$2.variable},
+     {tag: [tags$1.className], color: config$2.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$2.number},
+     {tag: [tags$1.typeName], color: config$2.type, fontStyle: config$2.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$2.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$2.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$2.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$2.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$2.variable},
+     {tag: tags$1.invalid, color: config$2.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const tokyoNight = [
+     tokyoNightTheme,
+     syntaxHighlighting(tokyoNightHighlightStyle),
+   ];
+
+   const config$1 = {
+     name: 'tokyoNightStorm',
+     dark: true,
+     background: '#24283b',
+     foreground: '#7982a9',
+     selection: '#6f7bb630',
+     cursor: '#c0caf5',
+     dropdownBackground: '#24283b',
+     dropdownBorder: '#7982a9',
+     activeLine: '#292e42',
+     matchingBracket: '#1f2335',
+     keyword: '#bb9af7',
+     storage: '#bb9af7',
+     variable: '#c0caf5',
+     parameter: '#c0caf5',
+     function: '#7aa2f7',
+     string: '#9ece6a',
+     constant: '#bb9af7',
+     type: '#2ac3de',
+     class: '#c0caf5',
+     number: '#ff9e64',
+     comment: '#565f89',
+     heading: '#89ddff',
+     invalid: '#ff5370',
+     regexp: '#b4f9f8',
+   };
+
+   const tokyoNightStormTheme = EditorView.theme({
+     '&': {
+       color: config$1.foreground,
+       backgroundColor: config$1.background,
+     },
+
+     '.cm-content': {caretColor: config$1.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config$1.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config$1.selection},
+
+     '.cm-panels': {backgroundColor: config$1.dropdownBackground, color: config$1.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config$1.dropdownBackground,
+       outline: `1px solid ${config$1.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config$1.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config$1.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config$1.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config$1.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config$1.background,
+       color: config$1.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config$1.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config$1.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config$1.dropdownBorder}`,
+       backgroundColor: config$1.dropdownBackground,
+       color: config$1.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config$1.foreground,
+       borderBottomColor: config$1.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config$1.selection,
+         color: config$1.foreground,
+       }
+     }
+   }, {dark: config$1.dark});
+
+   const tokyoNightStormHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config$1.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config$1.variable},
+     {tag: [tags$1.propertyName], color: config$1.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config$1.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config$1.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config$1.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config$1.variable},
+     {tag: [tags$1.className], color: config$1.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config$1.number},
+     {tag: [tags$1.typeName], color: config$1.type, fontStyle: config$1.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config$1.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config$1.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config$1.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config$1.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config$1.variable},
+     {tag: tags$1.invalid, color: config$1.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const tokyoNightStorm = [
+     tokyoNightStormTheme,
+     syntaxHighlighting(tokyoNightStormHighlightStyle),
+   ];
+
+   const config = {
+     name: 'tokyoNightDay',
+     dark: false,
+     background: '#e1e2e7',
+     foreground: '#6a6f8e',
+     selection: '#8591b840',
+     cursor: '#3760bf',
+     dropdownBackground: '#e1e2e7',
+     dropdownBorder: '#6a6f8e',
+     activeLine: '#d9dae4',
+     matchingBracket: '#e9e9ec',
+     keyword: '#9854f1',
+     storage: '#9854f1',
+     variable: '#3760bf',
+     parameter: '#3760bf',
+     function: '#2e7de9',
+     string: '#587539',
+     constant: '#9854f1',
+     type: '#07879d',
+     class: '#3760bf',
+     number: '#b15c00',
+     comment: '#9da3c2',
+     heading: '#006a83',
+     invalid: '#ff3e64',
+     regexp: '#2e5857',
+   };
+
+   const tokyoNightDayTheme = EditorView.theme({
+     '&': {
+       color: config.foreground,
+       backgroundColor: config.background,
+     },
+
+     '.cm-content': {caretColor: config.cursor},
+
+     '.cm-cursor, .cm-dropCursor': {borderLeftColor: config.cursor},
+     '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {backgroundColor: config.selection},
+
+     '.cm-panels': {backgroundColor: config.dropdownBackground, color: config.foreground},
+     '.cm-panels.cm-panels-top': {borderBottom: '2px solid black'},
+     '.cm-panels.cm-panels-bottom': {borderTop: '2px solid black'},
+
+     '.cm-searchMatch': {
+       backgroundColor: config.dropdownBackground,
+       outline: `1px solid ${config.dropdownBorder}`
+     },
+     '.cm-searchMatch.cm-searchMatch-selected': {
+       backgroundColor: config.selection
+     },
+
+     '.cm-activeLine': {backgroundColor: config.activeLine},
+     '.cm-selectionMatch': {backgroundColor: config.selection},
+
+     '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+       backgroundColor: config.matchingBracket,
+       outline: 'none'
+     },
+
+     '.cm-gutters': {
+       backgroundColor: config.background,
+       color: config.foreground,
+       border: 'none'
+     },
+     '.cm-activeLineGutter': {backgroundColor: config.background},
+
+     '.cm-foldPlaceholder': {
+       backgroundColor: 'transparent',
+       border: 'none',
+       color: config.foreground
+     },
+     '.cm-tooltip': {
+       border: `1px solid ${config.dropdownBorder}`,
+       backgroundColor: config.dropdownBackground,
+       color: config.foreground,
+     },
+     '.cm-tooltip .cm-tooltip-arrow:before': {
+       borderTopColor: 'transparent',
+       borderBottomColor: 'transparent'
+     },
+     '.cm-tooltip .cm-tooltip-arrow:after': {
+       borderTopColor: config.foreground,
+       borderBottomColor: config.foreground,
+     },
+     '.cm-tooltip-autocomplete': {
+       '& > ul > li[aria-selected]': {
+         background: config.selection,
+         color: config.foreground,
+       }
+     }
+   }, {dark: config.dark});
+
+   const tokyoNightDayHighlightStyle = HighlightStyle.define([
+     {tag: tags$1.keyword, color: config.keyword},
+     {tag: [tags$1.name, tags$1.deleted, tags$1.character, tags$1.macroName], color: config.variable},
+     {tag: [tags$1.propertyName], color: config.function},
+     {tag: [tags$1.processingInstruction, tags$1.string, tags$1.inserted, tags$1.special(tags$1.string)], color: config.string},
+     {tag: [tags$1.function(tags$1.variableName), tags$1.labelName], color: config.function},
+     {tag: [tags$1.color, tags$1.constant(tags$1.name), tags$1.standard(tags$1.name)], color: config.constant},
+     {tag: [tags$1.definition(tags$1.name), tags$1.separator], color: config.variable},
+     {tag: [tags$1.className], color: config.class},
+     {tag: [tags$1.number, tags$1.changed, tags$1.annotation, tags$1.modifier, tags$1.self, tags$1.namespace], color: config.number},
+     {tag: [tags$1.typeName], color: config.type, fontStyle: config.type},
+     {tag: [tags$1.operator, tags$1.operatorKeyword], color: config.keyword},
+     {tag: [tags$1.url, tags$1.escape, tags$1.regexp, tags$1.link], color: config.regexp},
+     {tag: [tags$1.meta, tags$1.comment], color: config.comment},
+     {tag: tags$1.strong, fontWeight: 'bold'},
+     {tag: tags$1.emphasis, fontStyle: 'italic'},
+     {tag: tags$1.link, textDecoration: 'underline'},
+     {tag: tags$1.heading, fontWeight: 'bold', color: config.heading},
+     {tag: [tags$1.atom, tags$1.bool, tags$1.special(tags$1.variableName)], color: config.variable},
+     {tag: tags$1.invalid, color: config.invalid},
+     {tag: tags$1.strikethrough, textDecoration: 'line-through'},
+   ]);
+
+   const tokyoNightDay = [
+     tokyoNightDayTheme,
+     syntaxHighlighting(tokyoNightDayHighlightStyle),
    ];
 
    /*
@@ -32755,7 +31628,40 @@ https://github.com/A99US/CM6-Browser-Wrapper
    https://github.com/A99US/CM6-Browser-Wrapper
 
    */
-
+   /*
+   import {materialLight} from '@ddietr/codemirror-themes'
+   import {materialDark} from '@ddietr/codemirror-themes'
+   import {solarizedLight} from '@ddietr/codemirror-themes'
+   import {solarizedDark} from '@ddietr/codemirror-themes'
+   import {dracula} from '@ddietr/codemirror-themes'
+   import {githubLight} from '@ddietr/codemirror-themes'
+   import {githubDark} from '@ddietr/codemirror-themes'
+   import {aura} from '@ddietr/codemirror-themes'
+   import {tokyoNight} from '@ddietr/codemirror-themes'
+   import {tokyoNightStorm} from '@ddietr/codemirror-themes'
+   import {tokyoNightDay} from '@ddietr/codemirror-themes'
+   */
+   /*
+   Not using these, Not updated, breaking change
+   import {
+       amy as amy,
+       barf as barf,
+       bespin as bespin,
+       birdsOfParadise as birdsOfParadise,
+       boysAndGirls as boysAndGirls,
+       cobalt as cobalt,
+       coolGlow as coolGlow,
+       dracula as dracula
+   } from 'thememirror'
+   import { basicDark } from 'cm6-theme-basic-dark'
+   import { basicLight } from 'cm6-theme-basic-light'
+   import { gruvboxDark } from 'cm6-theme-gruvbox-dark'
+   import { gruvboxLight } from 'cm6-theme-gruvbox-light'
+   import { materialDark } from 'cm6-theme-material-dark'
+   import { nord } from 'cm6-theme-nord'
+   import { solarizedDark } from 'cm6-theme-solarized-dark'
+   import { solarizedLight } from 'cm6-theme-solarized-light'
+   */
    let languageConf = new Compartment,
        themeConf = new Compartment,
        linewrapConf = new Compartment,
@@ -32770,6 +31676,20 @@ https://github.com/A99US/CM6-Browser-Wrapper
        },
        themeopt = {
            DefaultTheme: aceCobalt,
+           materialDarker: materialDarker,
+           aura: aura,
+           dracula: dracula,
+           githubLight: githubLight,
+           githubDark: githubDark,
+           materialDark: materialDark,
+           materialLight: materialLight,
+           solarizedLight: solarizedLight,
+           solarizedDark: solarizedDark,
+           tokyoNight: tokyoNight,
+           tokyoNightDay: tokyoNightDay,
+           tokyoNightStorm: tokyoNightStorm,
+           /*
+           Theme not up-to-date
            amy: amy,
            barf: barf,
            bespin: bespin,
@@ -32783,10 +31703,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
            gruvboxDark: gruvboxDark,
            gruvboxLight: gruvboxLight,
            materialDark: materialDark,
-           materialDarker: materialDarker,
            nord: nord,
            solarizedDark: solarizedDark,
            solarizedLight: solarizedLight
+           */
        };
 
    let extensionArray = [],

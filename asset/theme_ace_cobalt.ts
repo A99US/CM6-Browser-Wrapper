@@ -38,7 +38,7 @@ const aceCobaltTheme = EditorView.theme(
     },
 
     '.cm-cursor, .cm-dropCursor': { borderLeftColor: acecursor },
-    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
+    '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
       { backgroundColor: aceselection },
 
     '.cm-panels': { backgroundColor: darkBackground, color: base03 },
