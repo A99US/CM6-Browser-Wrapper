@@ -64,12 +64,16 @@ editordiv : {
     snippets: ['html', 'javascript'],
     // Default : DefaultTheme (Ace Cobalt)
     theme: 'DefaultTheme',
+    // Enable extension
+    extension: [ "cm6-texttolink" ],
     // IndenUnit default : 2
     indentunit: 2,
     // linewrap default : false
     linewrap: true,
     // lineNumbers default : true
-    lineNumbers: 1,
+    lineNumbers: true,
+    // Default line where the cursor would be on editor load
+    defaultline: 12,
     // readonly default : false
     readonly: 0,
     // KeyMap to be used : 'indentWithTab' , 'searchKeymap' , 'completionKeymap'
@@ -80,6 +84,9 @@ editordiv : {
 	// panel: 'top' => Panel on top position of editor
 	// panel: true => Panel on bottom position of editor
         panel: 1,
+	// Show / hide panel button (Not the panel itself)
+	// Default : true
+	panelshow: false,
 	// List of buttons to add
         // 'history' , 'linewrap' , 'readonly' , 'indent' , 'selectall' , 'search' , 'lang' , 'theme'
         panelitem: ['history', 'linewrap', 'readonly', 'lang', 'theme'],
@@ -183,6 +190,7 @@ The naming of its ID would be **EditorPrefix+"-"+command+"-"+ParentName** (ie. '
  - **indentless** : Decrease Indent
  - **selectall** : Select All Text
  - **search** : Open Search Panel
+ - **gotoline** : Move The Cursor To Certain Line
  - **linewrap** : Enable / Disable LineWrap
  - **readonly** : Enable / Disable ReadOnly
 
@@ -194,6 +202,14 @@ ID : EditorPrefix +"-"+ command +"-"+ ParentName
 <input type='button' id='CMEditorPrefix-undoall-editordiv' value='Undo All'>
 <!-- Select All Text -->
 <input type='button' id='CMEditorPrefix-selectall-editordiv' value=''>
+```
+
+Additionally, you can use **gotoline** programatically by changing the button's property of **lineval** and then click the button like so :
+
+```javascript
+// Go to line 45
+let LineTarget = 45;
+$("CMEditorPrefix-gotoline-editordiv").prop("lineval", LineTarget).click();
 ```
 
 #### Select Options
