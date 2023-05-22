@@ -1,12 +1,14 @@
 window.testdoccode =
 `<?php
 echo 'test code !!!';
-$data = "Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper";
+$data = "Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper Test LineWrapper";
 function calc($var) {
   return $var * 10 ;
 }
 ?>
 <form>
+  This is a link : https://t.co
+  This is a link Too : https://github.com
   <textarea rows="130" cols="25" id='data'></textarea>
   <input type="button" name="savedata" value="Save Data">
 </form>

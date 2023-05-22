@@ -31,6 +31,7 @@
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@uiw/codemirror-extensions-hyper-link": "^4.19.16",
     "@uiw/codemirror-themes-all": "^4.19.16",
+    "cm6-texttolink": "^1.0.0",
     "cm6-theme-basic-dark": "^0.2.0",
     "cm6-theme-basic-light": "^0.2.0",
     "cm6-theme-gruvbox-dark": "^0.2.0",

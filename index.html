@@ -20,7 +20,7 @@
     <div id="editorbutton"></div>
 </body>
 <script src="asset/jquery-3.4.1.min.js"></script>
-<script src="asset/ismobile.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/A99US/ismobile/ismobile.js"></script>
 <script type="text/javascript" src="./asset/doccode.js"></script>
 <script type="text/javascript">
 var EditorPrefix = 'CodeMirror6',
@@ -31,19 +31,22 @@ var EditorPrefix = 'CodeMirror6',
         historydelay: 10,
         lang: 'json',
         snippets: ['html', 'javascript'],
-        theme: 'DefaultTheme',
+        theme: 'tokyoNight',
+        extension: ['cm6-texttolink'],
         indentunit: 2,
         linewrap: 1,
         lineNumbers: 1,
         readonly: 0,
+        defaultline: 5,
         keymap: ['indentWithTab', 'searchKeymap', 'completionKeymap'],
         control: {
             panel: 1,
+            panelshow: !ismobile,
             panelitem: ['history', 'indent', 'selectall', 'lang', 'theme'],
             prepend: 1,
             prependitem: ['history', 'linewrap', 'readonly', 'lang', 'theme'],
-            append: 0,
-            appenditem: ['history', 'linewrap', 'search'],
+            append: 1,
+            appenditem: ['history', 'linewrap', 'search', 'gotoline'],
             element: 'editorbutton',
             elementitem: ['lang', 'theme'],
         },

@@ -1,7 +1,5 @@
 /*
-
 https://github.com/A99US/CM6-Browser-Wrapper
-
 */
 
 // import { basicSetup } from "codemirror"
@@ -21,8 +19,8 @@ import { autocompletion, CompletionContext, startCompletion, currentCompletions,
 // import { linter, lintGutter, lintKeymap, openLintPanel } from '@codemirror/lint' // Diagnostic
 // import Linter from "eslint4b-prebuilt"
 
-// import snippetmaker from './snippet.js'
 import snippetmaker from 'codemirror-6-snippetbuilder'
+import { TextToLink, hyperLinkStyle } from 'cm6-texttolink'
 import snippet_php_h4kst3r from './asset/snippet_php_h4kst3r.ts'
 import snippet_html_abusaidm from './asset/snippet_html_abusaidm.ts'
 import snippet_jquery_DonJayamanne from './asset/snippet_jquery_DonJayamanne.ts'
@@ -34,7 +32,7 @@ import snippet_js_capaj from './asset/snippet_js_capaj.ts'
 import { aceCobalt as DefaultTheme } from './asset/theme_ace_cobalt.ts'
 import { materialDarker } from './asset/theme_material_darker.ts'
 /*
-Kept getting error, might be NPM Version
+Kept getting error, might be NPM Version / TypeScript
 I'm On win7, can't update NPM Version
 Use next commented lines if you're on latest NPM Version
 import {materialLight} from './ddietr.theme/material-light.ts'
@@ -265,6 +263,15 @@ $(document).on('click', '[id^="' + EditorPrefix + '-"]', function() {
         } else {
             closeSearchPanel(EditorVar[parent]);
         }
+    } else if (CommandId[1] == 'gotoline') {
+        // GoToLine Button
+        let optline = ThisButton.prop("lineval");
+        if(!optline || optline == "")
+            optline = prompt('Choose Line . . . ');
+        if(optline){
+            gotoline(parent, optline);
+        }
+        ThisButton.prop("lineval","");
     } else if (CommandId[1] == 'linewrap') {
         // LineWrap Button
         EditorVar[parent].dispatch({
@@ -349,6 +356,8 @@ function neweditor(parent) {
         if (setting['control']['panel'])
             buildcontrol(parent, true);
     }
+    if (setting['defaultline'])
+        gotoline(parent, setting['defaultline']);
     // Reset History Button
     buttonstatus(parent);
 }
@@ -368,6 +377,8 @@ function newstate(parent, updatestate = false) {
         EditorVar[parent].setState(StateVar);
         if (setting['control'] && setting['control']['panel'])
             buildcontrol(parent, true);
+        if (setting['defaultline'])
+            gotoline(parent, setting['defaultline']);
         buttonstatus(parent);
         return;
     }
@@ -385,6 +396,20 @@ function updatedoc(parent) {
             to: EditorVar[parent].state.doc.length,
             insert: (window[window.EditorSetting[parent]['data']] || '')
         }
+    });
+}
+
+/*
+Function to go to certain line
+*/
+function gotoline(parent, line) {
+    let from, max = EditorVar[parent].state.doc.lines;
+    if(line < 1) from = 0;
+    else if(line > max) from = EditorVar[parent].state.doc.line(max).from;
+    else from = EditorVar[parent].state.doc.line(line).from;
+    EditorVar[parent].dispatch({
+        selection: { anchor: from },
+        scrollIntoView: true
     });
 }
 
@@ -431,6 +456,10 @@ function buildextension(parent) {
             (setting['linewrap']) ? EditorView.lineWrapping : []
         )
     ]);
+    if (setting['extension']){
+        if (setting['extension'] == "cm6-texttolink")
+            customExt = customExt.concat([TextToLink(EditorView), hyperLinkStyle]);
+    }
     if (typeof setting['lineNumbers'] === 'undefined' || setting['lineNumbers'] == true)
         customExt.push(lineNumbers());
     if (setting['css'])
@@ -545,6 +574,9 @@ function buildcontrol(parent, panelonly = false) {
                 (setting['readonly']) ? 'On' : 'Off'
             ));
         };
+        controlopt['gotoline'] = () => {
+            return button('-gotoline-', 'GoToLine');
+        };
         controlopt['lang'] = () => {
             str = "";
             str += "<select id='" + EditorPrefix + '-setlang-' + parent + "'>";
@@ -575,15 +607,21 @@ function buildcontrol(parent, panelonly = false) {
 
     // Add Control To Panel
     if (panelonly == true) {
-        let topposition = (setting['control']['panel'] == 'top') ? true : false;
-
+        let topposition = (setting['control']['panel'] == 'top') ? true : false,
+            panelshow, paneltext;
+        if(setting['control']['panelshow'] == false){
+            panelshow = "hidden='true'"; paneltext = "Show";
+        }else{
+            panelshow = ''; paneltext = "Hide";
+        }
         function createpaneldiv() {
             let dom = document.createElement("div");
             dom.id = 'panelcontrol' + parent;
             dom.innerHTML =
-                button('-spancontrolpanel-', 'Hide') +
+                button('-spancontrolpanel-', paneltext) +
                 "<span id='spancontrolpanel" + parent + "' style='" +
-                (setting['control']['panelstyle'] || "line-height: 175%;") + "'>" +
+                (setting['control']['panelstyle'] || "line-height: 175%;") + "' "+
+                panelshow +" >" +
                 control(setting['control']['panelitem']) +
                 "</span>";
             return { top: topposition, dom };

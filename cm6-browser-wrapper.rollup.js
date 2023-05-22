@@ -4382,7 +4382,9 @@ https://github.com/A99US/CM6-Browser-Wrapper
                this.focusNode == domSel.focusNode && this.focusOffset == domSel.focusOffset;
        }
        setRange(range) {
-           this.set(range.anchorNode, range.anchorOffset, range.focusNode, range.focusOffset);
+           let { anchorNode, focusNode } = range;
+           // Clip offsets to node size to avoid crashes when Safari reports bogus offsets (#1152)
+           this.set(anchorNode, Math.min(range.anchorOffset, anchorNode ? maxOffset(anchorNode) : 0), focusNode, Math.min(range.focusOffset, focusNode ? maxOffset(focusNode) : 0));
        }
        set(anchorNode, anchorOffset, focusNode, focusOffset) {
            this.anchorNode = anchorNode;
@@ -4455,6 +4457,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
        let node = selection.focusNode, offset = selection.focusOffset;
        if (!node || selection.anchorNode != node || selection.anchorOffset != offset)
            return false;
+       // Safari can report bogus offsets (#1152)
+       offset = Math.min(offset, maxOffset(node));
        for (;;) {
            if (offset) {
                if (node.nodeType != 1)
@@ -4978,15 +4982,15 @@ https://github.com/A99US/CM6-Browser-Wrapper
    }
    // Also used for collapsed ranges that don't have a placeholder widget!
    class WidgetView extends ContentView {
+       static create(widget, length, side) {
+           return new (widget.customView || WidgetView)(widget, length, side);
+       }
        constructor(widget, length, side) {
            super();
            this.widget = widget;
            this.length = length;
            this.side = side;
            this.prevWidget = null;
-       }
-       static create(widget, length, side) {
-           return new (widget.customView || WidgetView)(widget, length, side);
        }
        split(from) {
            let result = WidgetView.create(this.widget, this.length - from, this.side);
@@ -5802,7 +5806,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        }
        domBoundsAround() { return null; }
        become(other) {
-           if (other instanceof BlockWidgetView && other.type == this.type &&
+           if (other instanceof BlockWidgetView &&
                other.widget.constructor == this.widget.constructor) {
                if (!other.widget.compare(this.widget))
                    this.markDirty(true);
@@ -5810,6 +5814,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                    this.prevWidget = this.widget;
                this.widget = other.widget;
                this.length = other.length;
+               this.type = other.type;
                this.breakAfter = other.breakAfter;
                return true;
            }
@@ -6166,6 +6171,23 @@ https://github.com/A99US/CM6-Browser-Wrapper
    const decorations = /*@__PURE__*/Facet.define();
    const atomicRanges = /*@__PURE__*/Facet.define();
    const scrollMargins = /*@__PURE__*/Facet.define();
+   function getScrollMargins(view) {
+       let left = 0, right = 0, top = 0, bottom = 0;
+       for (let source of view.state.facet(scrollMargins)) {
+           let m = source(view);
+           if (m) {
+               if (m.left != null)
+                   left = Math.max(left, m.left);
+               if (m.right != null)
+                   right = Math.max(right, m.right);
+               if (m.top != null)
+                   top = Math.max(top, m.top);
+               if (m.bottom != null)
+                   bottom = Math.max(bottom, m.bottom);
+           }
+       }
+       return { left, right, top, bottom };
+   }
    const styleModule = /*@__PURE__*/Facet.define();
    class ChangedRange {
        constructor(fromA, toA, fromB, toB) {
@@ -6353,6 +6375,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
    */
    class BidiSpan {
        /**
+       The direction of this span.
+       */
+       get dir() { return this.level % 2 ? RTL : LTR; }
+       /**
        @internal
        */
        constructor(
@@ -6376,10 +6402,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
            this.to = to;
            this.level = level;
        }
-       /**
-       The direction of this span.
-       */
-       get dir() { return this.level % 2 ? RTL : LTR; }
        /**
        @internal
        */
@@ -6632,6 +6654,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let parent = start.parentNode;
            for (let cur = start;;) {
                this.findPointBefore(parent, cur);
+               let oldLen = this.text.length;
                this.readNode(cur);
                let next = cur.nextSibling;
                if (next == end)
@@ -6639,7 +6662,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                let view = ContentView.get(cur), nextView = ContentView.get(next);
                if (view && nextView ? view.breakAfter :
                    (view ? view.breakAfter : isBlockElement(cur)) ||
-                       (isBlockElement(next) && (cur.nodeName != "BR" || cur.cmIgnore)))
+                       (isBlockElement(next) && (cur.nodeName != "BR" || cur.cmIgnore) && this.text.length > oldLen))
                    this.lineBreak();
                cur = next;
            }
@@ -6720,6 +6743,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
    }
 
    class DocView extends ContentView {
+       get length() { return this.view.state.doc.length; }
        constructor(view) {
            super();
            this.view = view;
@@ -6750,7 +6774,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
            this.updateDeco();
            this.updateInner([new ChangedRange(0, 0, 0, view.state.doc.length)], 0);
        }
-       get length() { return this.view.state.doc.length; }
        // Update the document view to a given state. scrollIntoView can be
        // used as a hint to compute a new viewport that includes that
        // position, if we know the editor is going to scroll that position
@@ -7096,22 +7119,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
            if (!range.empty && (other = this.coordsAt(range.anchor, range.anchor > range.head ? -1 : 1)))
                rect = { left: Math.min(rect.left, other.left), top: Math.min(rect.top, other.top),
                    right: Math.max(rect.right, other.right), bottom: Math.max(rect.bottom, other.bottom) };
-           let mLeft = 0, mRight = 0, mTop = 0, mBottom = 0;
-           for (let margins of this.view.state.facet(scrollMargins).map(f => f(this.view)))
-               if (margins) {
-                   let { left, right, top, bottom } = margins;
-                   if (left != null)
-                       mLeft = Math.max(mLeft, left);
-                   if (right != null)
-                       mRight = Math.max(mRight, right);
-                   if (top != null)
-                       mTop = Math.max(mTop, top);
-                   if (bottom != null)
-                       mBottom = Math.max(mBottom, bottom);
-               }
+           let margins = getScrollMargins(this.view);
            let targetRect = {
-               left: rect.left - mLeft, top: rect.top - mTop,
-               right: rect.right + mRight, bottom: rect.bottom + mBottom
+               left: rect.left - margins.left, top: rect.top - margins.top,
+               right: rect.right + margins.right, bottom: rect.bottom + margins.bottom
            };
            scrollRectIntoView(this.view.scrollDOM, targetRect, range.head < range.anchor ? -1 : 1, target.x, target.y, target.xMargin, target.yMargin, this.view.textDirection == Direction.LTR);
        }
@@ -7177,15 +7188,17 @@ https://github.com/A99US/CM6-Browser-Wrapper
        let newFrom = changes.mapPos(from, 1), newTo = Math.max(newFrom, changes.mapPos(to, -1));
        let { state } = view, text = node.nodeType == 3 ? node.nodeValue :
            new DOMReader([], state).readRange(node.firstChild, null).text;
+       if (text.indexOf(LineBreakPlaceholder) > -1)
+           return Decoration.none; // Don't try to preserve multi-line compositions
        if (newTo - newFrom < text.length) {
-           if (state.doc.sliceString(newFrom, Math.min(state.doc.length, newFrom + text.length), LineBreakPlaceholder) == text)
+           if (state.doc.sliceString(newFrom, Math.min(state.doc.length, newFrom + text.length)) == text)
                newTo = newFrom + text.length;
-           else if (state.doc.sliceString(Math.max(0, newTo - text.length), newTo, LineBreakPlaceholder) == text)
+           else if (state.doc.sliceString(Math.max(0, newTo - text.length), newTo) == text)
                newFrom = newTo - text.length;
            else
                return Decoration.none;
        }
-       else if (state.doc.sliceString(newFrom, newTo, LineBreakPlaceholder) != text) {
+       else if (state.doc.sliceString(newFrom, newTo) != text) {
            return Decoration.none;
        }
        let topView = ContentView.get(node);
@@ -7598,15 +7611,15 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return EditorSelection.cursor(pos, start.assoc, undefined, goal);
        }
    }
-   function skipAtoms(view, oldPos, pos) {
-       let atoms = view.state.facet(atomicRanges).map(f => f(view));
+   function skipAtomicRanges(atoms, pos, bias) {
        for (;;) {
-           let moved = false;
+           let moved = 0;
            for (let set of atoms) {
-               set.between(pos.from - 1, pos.from + 1, (from, to, value) => {
-                   if (pos.from > from && pos.from < to) {
-                       pos = oldPos.head > pos.from ? EditorSelection.cursor(from, 1) : EditorSelection.cursor(to, -1);
-                       moved = true;
+               set.between(pos - 1, pos + 1, (from, to, value) => {
+                   if (pos > from && pos < to) {
+                       let side = moved || bias || (pos - from < to - pos ? -1 : 1);
+                       pos = side < 0 ? from : to;
+                       moved = side;
                    }
                });
            }
@@ -7614,9 +7627,17 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return pos;
        }
    }
+   function skipAtoms(view, oldPos, pos) {
+       let newPos = skipAtomicRanges(view.state.facet(atomicRanges).map(f => f(view)), pos.from, oldPos.head > pos.from ? -1 : 1);
+       return newPos == pos.from ? pos : EditorSelection.cursor(newPos, newPos < pos.from ? 1 : -1);
+   }
 
    // This will also be where dragging info and such goes
    class InputState {
+       setSelectionOrigin(origin) {
+           this.lastSelectionOrigin = origin;
+           this.lastSelectionTime = Date.now();
+       }
        constructor(view) {
            this.lastKeyCode = 0;
            this.lastKeyTime = 0;
@@ -7712,10 +7733,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
            // issue where the composition vanishes when you press enter.
            if (browser.safari)
                view.contentDOM.addEventListener("input", () => null);
-       }
-       setSelectionOrigin(origin) {
-           this.lastSelectionOrigin = origin;
-           this.lastSelectionTime = Date.now();
        }
        ensureHandlers(view, plugins) {
            var _a;
@@ -7863,6 +7880,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            this.scrolling = -1;
            this.lastEvent = startEvent;
            this.scrollParent = scrollableParent(view.contentDOM);
+           this.atoms = view.state.facet(atomicRanges).map(f => f(view));
            let doc = view.contentDOM.ownerDocument;
            doc.addEventListener("mousemove", this.move = this.move.bind(this));
            doc.addEventListener("mouseup", this.up = this.up.bind(this));
@@ -7889,13 +7907,14 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let sx = 0, sy = 0;
            let rect = ((_a = this.scrollParent) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect())
                || { left: 0, top: 0, right: this.view.win.innerWidth, bottom: this.view.win.innerHeight };
-           if (event.clientX <= rect.left + dragScrollMargin)
+           let margins = getScrollMargins(this.view);
+           if (event.clientX - margins.left <= rect.left + dragScrollMargin)
                sx = -dragScrollSpeed(rect.left - event.clientX);
-           else if (event.clientX >= rect.right - dragScrollMargin)
+           else if (event.clientX + margins.right >= rect.right - dragScrollMargin)
                sx = dragScrollSpeed(event.clientX - rect.right);
-           if (event.clientY <= rect.top + dragScrollMargin)
+           if (event.clientY - margins.top <= rect.top + dragScrollMargin)
                sy = -dragScrollSpeed(rect.top - event.clientY);
-           else if (event.clientY >= rect.bottom - dragScrollMargin)
+           else if (event.clientY + margins.bottom >= rect.bottom - dragScrollMargin)
                sy = dragScrollSpeed(event.clientY - rect.bottom);
            this.setScrollSpeed(sx, sy);
        }
@@ -7935,10 +7954,33 @@ https://github.com/A99US/CM6-Browser-Wrapper
            if (this.dragging === false)
                this.select(this.lastEvent);
        }
+       skipAtoms(sel) {
+           let ranges = null;
+           for (let i = 0; i < sel.ranges.length; i++) {
+               let range = sel.ranges[i], updated = null;
+               if (range.empty) {
+                   let pos = skipAtomicRanges(this.atoms, range.from, 0);
+                   if (pos != range.from)
+                       updated = EditorSelection.cursor(pos, -1);
+               }
+               else {
+                   let from = skipAtomicRanges(this.atoms, range.from, -1);
+                   let to = skipAtomicRanges(this.atoms, range.to, 1);
+                   if (from != range.from || to != range.to)
+                       updated = EditorSelection.range(range.from == range.anchor ? from : to, range.from == range.head ? from : to);
+               }
+               if (updated) {
+                   if (!ranges)
+                       ranges = sel.ranges.slice();
+                   ranges[i] = updated;
+               }
+           }
+           return ranges ? EditorSelection.create(ranges, sel.mainIndex) : sel;
+       }
        select(event) {
-           let selection = this.style.get(event, this.extend, this.multiple);
-           if (this.mustSelect || !selection.eq(this.view.state.selection) ||
-               selection.main.assoc != this.view.state.selection.main.assoc)
+           let { view } = this, selection = this.skipAtoms(this.style.get(event, this.extend, this.multiple));
+           if (this.mustSelect || !selection.eq(view.state.selection) ||
+               selection.main.assoc != view.state.selection.main.assoc)
                this.view.dispatch({
                    selection,
                    userEvent: "select.pointer"
@@ -8495,15 +8537,34 @@ https://github.com/A99US/CM6-Browser-Wrapper
        */
        height, 
        /**
-       The type of element this is. When querying lines, this may be
-       an array of all the blocks that make up the line.
+       @internal
        */
-       type) {
+       children, 
+       /**
+       @internal
+       */
+       deco) {
            this.from = from;
            this.length = length;
            this.top = top;
            this.height = height;
-           this.type = type;
+           this.children = children;
+           this.deco = deco;
+       }
+       /**
+       The type of element this is. When querying lines, this may be
+       an array of all the blocks that make up the line.
+       */
+       get type() {
+           var _a, _b, _c;
+           return (_c = (_a = this.children) !== null && _a !== void 0 ? _a : (_b = this.deco) === null || _b === void 0 ? void 0 : _b.type) !== null && _c !== void 0 ? _c : BlockType.Text;
+       }
+       /**
+       If this is a widget block, this will return the widget
+       associated with it.
+       */
+       get widget() {
+           return this.deco && this.deco.widget;
        }
        /**
        The end of the element as a document position.
@@ -8517,9 +8578,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
        @internal
        */
        join(other) {
-           let detail = (Array.isArray(this.type) ? this.type : [this])
-               .concat(Array.isArray(other.type) ? other.type : [other]);
-           return new BlockInfo(this.from, this.length + other.length, this.top, this.height + other.height, detail);
+           let children = (this.children || [this]).concat(other.children || [other]);
+           return new BlockInfo(this.from, this.length + other.length, this.top, this.height + other.height, children, null);
        }
    }
    var QueryType$1 = /*@__PURE__*/(function (QueryType) {
@@ -8634,12 +8694,12 @@ https://github.com/A99US/CM6-Browser-Wrapper
    }
    HeightMap.prototype.size = 1;
    class HeightMapBlock extends HeightMap {
-       constructor(length, height, type) {
+       constructor(length, height, deco) {
            super(length, height);
-           this.type = type;
+           this.deco = deco;
        }
        blockAt(_height, _oracle, top, offset) {
-           return new BlockInfo(offset, this.length, top, this.height, this.type);
+           return new BlockInfo(offset, this.length, top, this.height, null, this.deco);
        }
        lineAt(_value, _type, oracle, top, offset) {
            return this.blockAt(0, oracle, top, offset);
@@ -8658,7 +8718,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
    }
    class HeightMapText extends HeightMapBlock {
        constructor(length, height) {
-           super(length, height, BlockType.Text);
+           super(length, height, null);
            this.collapsed = 0; // Amount of collapsed content in the line
            this.widgetHeight = 0; // Maximum inline widget height
        }
@@ -8713,12 +8773,12 @@ https://github.com/A99US/CM6-Browser-Wrapper
                let guess = offset + Math.round(Math.max(0, Math.min(1, (height - top) / this.height)) * this.length);
                let line = oracle.doc.lineAt(guess), lineHeight = perLine + line.length * perChar;
                let lineTop = Math.max(top, height - lineHeight / 2);
-               return new BlockInfo(line.from, line.length, lineTop, lineHeight, BlockType.Text);
+               return new BlockInfo(line.from, line.length, lineTop, lineHeight, null, null);
            }
            else {
                let line = Math.max(0, Math.min(lastLine - firstLine, Math.floor((height - top) / perLine)));
                let { from, length } = oracle.doc.line(firstLine + line);
-               return new BlockInfo(from, length, top + perLine * line, perLine, BlockType.Text);
+               return new BlockInfo(from, length, top + perLine * line, perLine, null, null);
            }
        }
        lineAt(value, type, oracle, top, offset) {
@@ -8726,13 +8786,13 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return this.blockAt(value, oracle, top, offset);
            if (type == QueryType$1.ByPosNoHeight) {
                let { from, to } = oracle.doc.lineAt(value);
-               return new BlockInfo(from, to - from, 0, 0, BlockType.Text);
+               return new BlockInfo(from, to - from, 0, 0, null, null);
            }
            let { firstLine, perLine, perChar } = this.heightMetrics(oracle, offset);
            let line = oracle.doc.lineAt(value), lineHeight = perLine + line.length * perChar;
            let linesAbove = line.number - firstLine;
            let lineTop = top + perLine * linesAbove + perChar * (line.from - offset - linesAbove);
-           return new BlockInfo(line.from, line.length, Math.max(top, Math.min(lineTop, top + this.height - lineHeight)), lineHeight, BlockType.Text);
+           return new BlockInfo(line.from, line.length, Math.max(top, Math.min(lineTop, top + this.height - lineHeight)), lineHeight, null, null);
        }
        forEachLine(from, to, oracle, top, offset, f) {
            from = Math.max(from, offset);
@@ -8745,7 +8805,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                    lineTop += perLine * linesAbove + perChar * (from - offset - linesAbove);
                }
                let lineHeight = perLine + perChar * line.length;
-               f(new BlockInfo(line.from, line.length, lineTop, lineHeight, BlockType.Text));
+               f(new BlockInfo(line.from, line.length, lineTop, lineHeight, null, null));
                lineTop += lineHeight;
                pos = line.to + 1;
            }
@@ -8975,7 +9035,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                    height = this.oracle.lineHeight;
                let len = to - from;
                if (deco.block) {
-                   this.addBlock(new HeightMapBlock(len, height, deco.type));
+                   this.addBlock(new HeightMapBlock(len, height, deco));
                }
                else if (len || height >= relevantWidgetHeight) {
                    this.addLineDeco(height, len);
@@ -9018,12 +9078,14 @@ https://github.com/A99US/CM6-Browser-Wrapper
            return line;
        }
        addBlock(block) {
+           var _a;
            this.enterLine();
-           if (block.type == BlockType.WidgetAfter && !this.isCovered)
+           let type = (_a = block.deco) === null || _a === void 0 ? void 0 : _a.type;
+           if (type == BlockType.WidgetAfter && !this.isCovered)
                this.ensureLine();
            this.nodes.push(block);
            this.writtenTo = this.pos = this.pos + block.length;
-           if (block.type != BlockType.WidgetBefore)
+           if (type != BlockType.WidgetBefore)
                this.covering = block;
        }
        addLineDeco(height, length) {
@@ -9626,7 +9688,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        if (scaler.scale == 1)
            return block;
        let bTop = scaler.toDOM(block.top), bBottom = scaler.toDOM(block.bottom);
-       return new BlockInfo(block.from, block.length, bTop, bBottom - bTop, Array.isArray(block.type) ? block.type.map(b => scaleBlock(b, scaler)) : block.type);
+       return new BlockInfo(block.from, block.length, bTop, bBottom - bTop, block.children && block.children.map(b => scaleBlock(b, scaler)), block.deco);
    }
 
    const theme = /*@__PURE__*/Facet.define({ combine: strs => strs.join(" ") });
@@ -9916,13 +9978,13 @@ https://github.com/A99US/CM6-Browser-Wrapper
    function applyDOMChange(view, domChange) {
        let change;
        let { newSel } = domChange, sel = view.state.selection.main;
+       let lastKey = view.inputState.lastKeyTime > Date.now() - 100 ? view.inputState.lastKeyCode : -1;
        if (domChange.bounds) {
            let { from, to } = domChange.bounds;
            let preferredPos = sel.from, preferredSide = null;
            // Prefer anchoring to end when Backspace is pressed (or, on
            // Android, when something was deleted)
-           if (view.inputState.lastKeyCode === 8 && view.inputState.lastKeyTime > Date.now() - 100 ||
-               browser.android && domChange.text.length < to - from) {
+           if (lastKey === 8 || browser.android && domChange.text.length < to - from) {
                preferredPos = sel.to;
                preferredSide = "end";
            }
@@ -9930,7 +9992,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            if (diff) {
                // Chrome inserts two newlines when pressing shift-enter at the
                // end of a line. DomChange drops one of those.
-               if (browser.chrome && view.inputState.lastKeyCode == 13 &&
+               if (browser.chrome && lastKey == 13 &&
                    diff.toB == diff.from + 2 && domChange.text.slice(diff.from, diff.toB) == LineBreakPlaceholder + LineBreakPlaceholder)
                    diff.toB--;
                change = { from: from + diff.from, to: from + diff.toA,
@@ -9988,7 +10050,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
                ((change.from == sel.from && change.to == sel.to &&
                    change.insert.length == 1 && change.insert.lines == 2 &&
                    dispatchKey(view.contentDOM, "Enter", 13)) ||
-                   (change.from == sel.from - 1 && change.to == sel.to && change.insert.length == 0 &&
+                   ((change.from == sel.from - 1 && change.to == sel.to && change.insert.length == 0 ||
+                       lastKey == 8 && change.insert.length < change.to - change.from) &&
                        dispatchKey(view.contentDOM, "Backspace", 8)) ||
                    (change.from == sel.from && change.to == sel.to + 1 && change.insert.length == 0 &&
                        dispatchKey(view.contentDOM, "Delete", 46))))
@@ -10386,7 +10449,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
                    let key = this.delayedAndroidKey;
                    if (key) {
                        this.clearDelayedAndroidKey();
-                       if (!this.flush() && key.force)
+                       this.view.inputState.lastKeyCode = key.keyCode;
+                       this.view.inputState.lastKeyTime = Date.now();
+                       let flushed = this.flush();
+                       if (!flushed && key.force)
                            dispatchKey(this.dom, key.key, key.keyCode);
                    }
                };
@@ -10591,6 +10657,53 @@ https://github.com/A99US/CM6-Browser-Wrapper
    */
    class EditorView {
        /**
+       The current editor state.
+       */
+       get state() { return this.viewState.state; }
+       /**
+       To be able to display large documents without consuming too much
+       memory or overloading the browser, CodeMirror only draws the
+       code that is visible (plus a margin around it) to the DOM. This
+       property tells you the extent of the current drawn viewport, in
+       document positions.
+       */
+       get viewport() { return this.viewState.viewport; }
+       /**
+       When there are, for example, large collapsed ranges in the
+       viewport, its size can be a lot bigger than the actual visible
+       content. Thus, if you are doing something like styling the
+       content in the viewport, it is preferable to only do so for
+       these ranges, which are the subset of the viewport that is
+       actually drawn.
+       */
+       get visibleRanges() { return this.viewState.visibleRanges; }
+       /**
+       Returns false when the editor is entirely scrolled out of view
+       or otherwise hidden.
+       */
+       get inView() { return this.viewState.inView; }
+       /**
+       Indicates whether the user is currently composing text via
+       [IME](https://en.wikipedia.org/wiki/Input_method), and at least
+       one change has been made in the current composition.
+       */
+       get composing() { return this.inputState.composing > 0; }
+       /**
+       Indicates whether the user is currently in composing state. Note
+       that on some platforms, like Android, this will be the case a
+       lot, since just putting the cursor on a word starts a
+       composition there.
+       */
+       get compositionStarted() { return this.inputState.composing >= 0; }
+       /**
+       The document or shadow root that the view lives in.
+       */
+       get root() { return this._root; }
+       /**
+       @internal
+       */
+       get win() { return this.dom.ownerDocument.defaultView || window; }
+       /**
        Construct a new view. You'll want to either provide a `parent`
        option, or put `view.dom` into your document after creating a
        view, so that the user can see the editor.
@@ -10643,56 +10756,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
            if (config.parent)
                config.parent.appendChild(this.dom);
        }
-       /**
-       The current editor state.
-       */
-       get state() { return this.viewState.state; }
-       /**
-       To be able to display large documents without consuming too much
-       memory or overloading the browser, CodeMirror only draws the
-       code that is visible (plus a margin around it) to the DOM. This
-       property tells you the extent of the current drawn viewport, in
-       document positions.
-       */
-       get viewport() { return this.viewState.viewport; }
-       /**
-       When there are, for example, large collapsed ranges in the
-       viewport, its size can be a lot bigger than the actual visible
-       content. Thus, if you are doing something like styling the
-       content in the viewport, it is preferable to only do so for
-       these ranges, which are the subset of the viewport that is
-       actually drawn.
-       */
-       get visibleRanges() { return this.viewState.visibleRanges; }
-       /**
-       Returns false when the editor is entirely scrolled out of view
-       or otherwise hidden.
-       */
-       get inView() { return this.viewState.inView; }
-       /**
-       Indicates whether the user is currently composing text via
-       [IME](https://en.wikipedia.org/wiki/Input_method), and at least
-       one change has been made in the current composition.
-       */
-       get composing() { return this.inputState.composing > 0; }
-       /**
-       Indicates whether the user is currently in composing state. Note
-       that on some platforms, like Android, this will be the case a
-       lot, since just putting the cursor on a word starts a
-       composition there.
-       */
-       get compositionStarted() { return this.inputState.composing >= 0; }
-       /**
-       The document or shadow root that the view lives in.
-       */
-       get root() { return this._root; }
-       /**
-       @internal
-       */
-       get win() { return this.dom.ownerDocument.defaultView || window; }
        dispatch(...input) {
-           this._dispatch(input.length == 1 && input[0] instanceof Transaction ? input[0]
-               : this.state.update(...input));
+           let tr = input.length == 1 && input[0] instanceof Transaction ? input[0]
+               : this.state.update(...input);
+           this._dispatch(tr, this);
        }
        /**
        Update the view for the given array of transactions. This will
@@ -11839,7 +11906,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let top = visualStart ? drawForLine(range.from, null, visualStart) : drawForWidget(startBlock, false);
            let bottom = visualEnd ? drawForLine(null, range.to, visualEnd) : drawForWidget(endBlock, true);
            let between = [];
-           if ((visualStart || startBlock).to < (visualEnd || endBlock).from - 1)
+           if ((visualStart || startBlock).to < (visualEnd || endBlock).from - (visualStart && visualEnd ? 1 : 0))
                between.push(piece(leftSide, top.bottom, rightSide, bottom.top));
            else if (top.bottom < bottom.top && view.elementAtHeight((top.bottom + bottom.top) / 2).type == BlockType.Text)
                top.bottom = bottom.top = (top.bottom + bottom.top) / 2;
@@ -12545,10 +12612,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
        return EditorView.mouseSelectionStyle.of((view, event) => filter(event) ? rectangleSelectionStyle(view, event) : null);
    }
    const keys = {
-       Alt: [18, e => e.altKey],
-       Control: [17, e => e.ctrlKey],
-       Shift: [16, e => e.shiftKey],
-       Meta: [91, e => e.metaKey]
+       Alt: [18, e => !!e.altKey],
+       Control: [17, e => !!e.ctrlKey],
+       Shift: [16, e => !!e.shiftKey],
+       Meta: [91, e => !!e.metaKey]
    };
    const showCrosshair = { style: "cursor: crosshair" };
    /**
@@ -13140,6 +13207,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        elementStyle: "",
        markers: () => RangeSet.empty,
        lineMarker: () => null,
+       widgetMarker: () => null,
        lineMarkerChange: null,
        initialSpacer: null,
        updateSpacer: null,
@@ -13220,24 +13288,28 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let classSet = [];
            let contexts = this.gutters.map(gutter => new UpdateContext(gutter, this.view.viewport, -this.view.documentPadding.top));
            for (let line of this.view.viewportLineBlocks) {
-               let text;
-               if (Array.isArray(line.type)) {
-                   for (let b of line.type)
-                       if (b.type == BlockType.Text) {
-                           text = b;
-                           break;
-                       }
-               }
-               else {
-                   text = line.type == BlockType.Text ? line : undefined;
-               }
-               if (!text)
-                   continue;
                if (classSet.length)
                    classSet = [];
-               advanceCursor(lineClasses, classSet, line.from);
-               for (let cx of contexts)
-                   cx.line(this.view, text, classSet);
+               if (Array.isArray(line.type)) {
+                   let first = true;
+                   for (let b of line.type) {
+                       if (b.type == BlockType.Text && first) {
+                           advanceCursor(lineClasses, classSet, b.from);
+                           for (let cx of contexts)
+                               cx.line(this.view, b, classSet);
+                           first = false;
+                       }
+                       else if (b.widget) {
+                           for (let cx of contexts)
+                               cx.widget(this.view, b);
+                       }
+                   }
+               }
+               else if (line.type == BlockType.Text) {
+                   advanceCursor(lineClasses, classSet, line.from);
+                   for (let cx of contexts)
+                       cx.line(this.view, line, classSet);
+               }
            }
            for (let cx of contexts)
                cx.finish();
@@ -13305,6 +13377,19 @@ https://github.com/A99US/CM6-Browser-Wrapper
            this.i = 0;
            this.cursor = RangeSet.iter(gutter.markers, viewport.from);
        }
+       addElement(view, block, markers) {
+           let { gutter } = this, above = block.top - this.height;
+           if (this.i == gutter.elements.length) {
+               let newElt = new GutterElement(view, block.height, above, markers);
+               gutter.elements.push(newElt);
+               gutter.dom.appendChild(newElt.dom);
+           }
+           else {
+               gutter.elements[this.i].update(view, block.height, above, markers);
+           }
+           this.height = block.bottom;
+           this.i++;
+       }
        line(view, line, extraMarkers) {
            let localMarkers = [];
            advanceCursor(this.cursor, localMarkers, line.from);
@@ -13316,17 +13401,12 @@ https://github.com/A99US/CM6-Browser-Wrapper
            let gutter = this.gutter;
            if (localMarkers.length == 0 && !gutter.config.renderEmptyElements)
                return;
-           let above = line.top - this.height;
-           if (this.i == gutter.elements.length) {
-               let newElt = new GutterElement(view, line.height, above, localMarkers);
-               gutter.elements.push(newElt);
-               gutter.dom.appendChild(newElt.dom);
-           }
-           else {
-               gutter.elements[this.i].update(view, line.height, above, localMarkers);
-           }
-           this.height = line.bottom;
-           this.i++;
+           this.addElement(view, line, localMarkers);
+       }
+       widget(view, block) {
+           let marker = this.gutter.config.widgetMarker(view, block.widget, block);
+           if (marker)
+               this.addElement(view, block, [marker]);
        }
        finish() {
            let gutter = this.gutter;
@@ -13494,6 +13574,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
                return null;
            return new NumberMarker(formatNumber(view, view.state.doc.lineAt(line.from).number));
        },
+       widgetMarker: () => null,
        lineMarkerChange: update => update.startState.facet(lineNumberConfig) != update.state.facet(lineNumberConfig),
        initialSpacer(view) {
            return new NumberMarker(formatNumber(view, maxLineNumber(view.state.doc.lines)));
@@ -16239,7 +16320,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        });
    }
    /**
-   Syntax node prop used to register sublangauges. Should be added to
+   Syntax node prop used to register sublanguages. Should be added to
    the top level node type for the language.
    */
    const sublanguageProp = /*@__PURE__*/new NodeProp();
@@ -16403,8 +16484,15 @@ https://github.com/A99US/CM6-Browser-Wrapper
        let field = state.field(Language.state, false);
        return field ? field.tree : Tree.empty;
    }
-   // Lezer-style Input object for a Text document.
+   /**
+   Lezer-style
+   [`Input`](https://lezer.codemirror.net/docs/ref#common.Input)
+   object for a [`Text`](https://codemirror.net/6/docs/ref/#state.Text) object.
+   */
    class DocInput {
+       /**
+       Create an input object for the given document.
+       */
        constructor(doc) {
            this.doc = doc;
            this.cursorPos = 0;
@@ -23337,14 +23425,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
            };
        })), { userEvent: "input.complete" });
    }
-   function applyCompletion(view, option) {
-       const apply = option.completion.apply || option.completion.label;
-       let result = option.source;
-       if (typeof apply == "string")
-           view.dispatch(Object.assign(Object.assign({}, insertCompletionText(view.state, apply, result.from, result.to)), { annotations: pickedCompletion.of(option.completion) }));
-       else
-           apply(view, option.completion, result.from, result.to);
-   }
    const SourceCache = /*@__PURE__*/new WeakMap();
    function asSource(source) {
        if (!Array.isArray(source))
@@ -23388,7 +23468,7 @@ https://github.com/A99US/CM6-Browser-Wrapper
        // is. See `Penalty` above.
        match(word) {
            if (this.pattern.length == 0)
-               return [0];
+               return [-100 /* Penalty.NotFull */];
            if (word.length < this.pattern.length)
                return null;
            let { chars, folded, any, precise, byWord } = this;
@@ -23546,6 +23626,232 @@ https://github.com/A99US/CM6-Browser-Wrapper
            style: `${side}: ${offset}px; max-width: ${maxWidth}px`,
            class: "cm-completionInfo-" + (narrow ? (rtl ? "left-narrow" : "right-narrow") : left ? "left" : "right")
        };
+   }
+
+   /**
+   Returns a command that moves the completion selection forward or
+   backward by the given amount.
+   */
+   function moveCompletionSelection(forward, by = "option") {
+       return (view) => {
+           let cState = view.state.field(completionState, false);
+           if (!cState || !cState.open || cState.open.disabled ||
+               Date.now() - cState.open.timestamp < view.state.facet(completionConfig).interactionDelay)
+               return false;
+           let step = 1, tooltip;
+           if (by == "page" && (tooltip = getTooltip(view, cState.open.tooltip)))
+               step = Math.max(2, Math.floor(tooltip.dom.offsetHeight /
+                   tooltip.dom.querySelector("li").offsetHeight) - 1);
+           let { length } = cState.open.options;
+           let selected = cState.open.selected > -1 ? cState.open.selected + step * (forward ? 1 : -1) : forward ? 0 : length - 1;
+           if (selected < 0)
+               selected = by == "page" ? 0 : length - 1;
+           else if (selected >= length)
+               selected = by == "page" ? length - 1 : 0;
+           view.dispatch({ effects: setSelectedEffect.of(selected) });
+           return true;
+       };
+   }
+   /**
+   Accept the current completion.
+   */
+   const acceptCompletion = (view) => {
+       let cState = view.state.field(completionState, false);
+       if (view.state.readOnly || !cState || !cState.open || cState.open.selected < 0 ||
+           Date.now() - cState.open.timestamp < view.state.facet(completionConfig).interactionDelay)
+           return false;
+       if (!cState.open.disabled)
+           return applyCompletion(view, cState.open.options[cState.open.selected]);
+       return true;
+   };
+   /**
+   Explicitly start autocompletion.
+   */
+   const startCompletion = (view) => {
+       let cState = view.state.field(completionState, false);
+       if (!cState)
+           return false;
+       view.dispatch({ effects: startCompletionEffect.of(true) });
+       return true;
+   };
+   /**
+   Close the currently active completion.
+   */
+   const closeCompletion = (view) => {
+       let cState = view.state.field(completionState, false);
+       if (!cState || !cState.active.some(a => a.state != 0 /* State.Inactive */))
+           return false;
+       view.dispatch({ effects: closeCompletionEffect.of(null) });
+       return true;
+   };
+   class RunningQuery {
+       constructor(active, context) {
+           this.active = active;
+           this.context = context;
+           this.time = Date.now();
+           this.updates = [];
+           // Note that 'undefined' means 'not done yet', whereas 'null' means
+           // 'query returned null'.
+           this.done = undefined;
+       }
+   }
+   const DebounceTime = 50, MaxUpdateCount = 50, MinAbortTime = 1000;
+   const completionPlugin = /*@__PURE__*/ViewPlugin.fromClass(class {
+       constructor(view) {
+           this.view = view;
+           this.debounceUpdate = -1;
+           this.running = [];
+           this.debounceAccept = -1;
+           this.composing = 0 /* CompositionState.None */;
+           for (let active of view.state.field(completionState).active)
+               if (active.state == 1 /* State.Pending */)
+                   this.startQuery(active);
+       }
+       update(update) {
+           let cState = update.state.field(completionState);
+           if (!update.selectionSet && !update.docChanged && update.startState.field(completionState) == cState)
+               return;
+           let doesReset = update.transactions.some(tr => {
+               return (tr.selection || tr.docChanged) && !getUserEvent(tr);
+           });
+           for (let i = 0; i < this.running.length; i++) {
+               let query = this.running[i];
+               if (doesReset ||
+                   query.updates.length + update.transactions.length > MaxUpdateCount && Date.now() - query.time > MinAbortTime) {
+                   for (let handler of query.context.abortListeners) {
+                       try {
+                           handler();
+                       }
+                       catch (e) {
+                           logException(this.view.state, e);
+                       }
+                   }
+                   query.context.abortListeners = null;
+                   this.running.splice(i--, 1);
+               }
+               else {
+                   query.updates.push(...update.transactions);
+               }
+           }
+           if (this.debounceUpdate > -1)
+               clearTimeout(this.debounceUpdate);
+           this.debounceUpdate = cState.active.some(a => a.state == 1 /* State.Pending */ && !this.running.some(q => q.active.source == a.source))
+               ? setTimeout(() => this.startUpdate(), DebounceTime) : -1;
+           if (this.composing != 0 /* CompositionState.None */)
+               for (let tr of update.transactions) {
+                   if (getUserEvent(tr) == "input")
+                       this.composing = 2 /* CompositionState.Changed */;
+                   else if (this.composing == 2 /* CompositionState.Changed */ && tr.selection)
+                       this.composing = 3 /* CompositionState.ChangedAndMoved */;
+               }
+       }
+       startUpdate() {
+           this.debounceUpdate = -1;
+           let { state } = this.view, cState = state.field(completionState);
+           for (let active of cState.active) {
+               if (active.state == 1 /* State.Pending */ && !this.running.some(r => r.active.source == active.source))
+                   this.startQuery(active);
+           }
+       }
+       startQuery(active) {
+           let { state } = this.view, pos = cur(state);
+           let context = new CompletionContext(state, pos, active.explicitPos == pos);
+           let pending = new RunningQuery(active, context);
+           this.running.push(pending);
+           Promise.resolve(active.source(context)).then(result => {
+               if (!pending.context.aborted) {
+                   pending.done = result || null;
+                   this.scheduleAccept();
+               }
+           }, err => {
+               this.view.dispatch({ effects: closeCompletionEffect.of(null) });
+               logException(this.view.state, err);
+           });
+       }
+       scheduleAccept() {
+           if (this.running.every(q => q.done !== undefined))
+               this.accept();
+           else if (this.debounceAccept < 0)
+               this.debounceAccept = setTimeout(() => this.accept(), DebounceTime);
+       }
+       // For each finished query in this.running, try to create a result
+       // or, if appropriate, restart the query.
+       accept() {
+           var _a;
+           if (this.debounceAccept > -1)
+               clearTimeout(this.debounceAccept);
+           this.debounceAccept = -1;
+           let updated = [];
+           let conf = this.view.state.facet(completionConfig);
+           for (let i = 0; i < this.running.length; i++) {
+               let query = this.running[i];
+               if (query.done === undefined)
+                   continue;
+               this.running.splice(i--, 1);
+               if (query.done) {
+                   let active = new ActiveResult(query.active.source, query.active.explicitPos, query.done, query.done.from, (_a = query.done.to) !== null && _a !== void 0 ? _a : cur(query.updates.length ? query.updates[0].startState : this.view.state));
+                   // Replay the transactions that happened since the start of
+                   // the request and see if that preserves the result
+                   for (let tr of query.updates)
+                       active = active.update(tr, conf);
+                   if (active.hasResult()) {
+                       updated.push(active);
+                       continue;
+                   }
+               }
+               let current = this.view.state.field(completionState).active.find(a => a.source == query.active.source);
+               if (current && current.state == 1 /* State.Pending */) {
+                   if (query.done == null) {
+                       // Explicitly failed. Should clear the pending status if it
+                       // hasn't been re-set in the meantime.
+                       let active = new ActiveSource(query.active.source, 0 /* State.Inactive */);
+                       for (let tr of query.updates)
+                           active = active.update(tr, conf);
+                       if (active.state != 1 /* State.Pending */)
+                           updated.push(active);
+                   }
+                   else {
+                       // Cleared by subsequent transactions. Restart.
+                       this.startQuery(current);
+                   }
+               }
+           }
+           if (updated.length)
+               this.view.dispatch({ effects: setActiveEffect.of(updated) });
+       }
+   }, {
+       eventHandlers: {
+           blur(event) {
+               let state = this.view.state.field(completionState, false);
+               if (state && state.tooltip && this.view.state.facet(completionConfig).closeOnBlur) {
+                   let dialog = state.open && getTooltip(this.view, state.open.tooltip);
+                   if (!dialog || !dialog.dom.contains(event.relatedTarget))
+                       this.view.dispatch({ effects: closeCompletionEffect.of(null) });
+               }
+           },
+           compositionstart() {
+               this.composing = 1 /* CompositionState.Started */;
+           },
+           compositionend() {
+               if (this.composing == 3 /* CompositionState.ChangedAndMoved */) {
+                   // Safari fires compositionend events synchronously, possibly
+                   // from inside an update, so dispatch asynchronously to avoid reentrancy
+                   setTimeout(() => this.view.dispatch({ effects: startCompletionEffect.of(false) }), 20);
+               }
+               this.composing = 0 /* CompositionState.None */;
+           }
+       }
+   });
+   function applyCompletion(view, option) {
+       const apply = option.completion.apply || option.completion.label;
+       let result = view.state.field(completionState).active.find(a => a.source == option.source);
+       if (!(result instanceof ActiveResult))
+           return false;
+       if (typeof apply == "string")
+           view.dispatch(Object.assign(Object.assign({}, insertCompletionText(view.state, apply, result.from, result.to)), { annotations: pickedCompletion.of(option.completion) }));
+       else
+           apply(view, option.completion, result.from, result.to);
+       return true;
    }
 
    function optionContent(config) {
@@ -23853,14 +24159,14 @@ https://github.com/A99US/CM6-Browser-Wrapper
                        if (getMatch)
                            for (let n of getMatch(option))
                                match.push(n);
-                       addOption(new Option(option, a, match, match[0]));
+                       addOption(new Option(option, a.source, match, match[0]));
                    }
                }
                else {
                    let matcher = new FuzzyMatcher(state.sliceDoc(a.from, a.to)), match;
                    for (let option of a.result.options)
                        if (match = matcher.match(option.label)) {
-                           addOption(new Option(option, a, match, match[0] + (option.boost || 0)));
+                           addOption(new Option(option, a.source, match, match[0] + (option.boost || 0)));
                        }
                }
            }
@@ -24084,221 +24390,6 @@ https://github.com/A99US/CM6-Browser-Wrapper
            showTooltip.from(f, val => val.tooltip),
            EditorView.contentAttributes.from(f, state => state.attrs)
        ]
-   });
-
-   /**
-   Returns a command that moves the completion selection forward or
-   backward by the given amount.
-   */
-   function moveCompletionSelection(forward, by = "option") {
-       return (view) => {
-           let cState = view.state.field(completionState, false);
-           if (!cState || !cState.open || cState.open.disabled ||
-               Date.now() - cState.open.timestamp < view.state.facet(completionConfig).interactionDelay)
-               return false;
-           let step = 1, tooltip;
-           if (by == "page" && (tooltip = getTooltip(view, cState.open.tooltip)))
-               step = Math.max(2, Math.floor(tooltip.dom.offsetHeight /
-                   tooltip.dom.querySelector("li").offsetHeight) - 1);
-           let { length } = cState.open.options;
-           let selected = cState.open.selected > -1 ? cState.open.selected + step * (forward ? 1 : -1) : forward ? 0 : length - 1;
-           if (selected < 0)
-               selected = by == "page" ? 0 : length - 1;
-           else if (selected >= length)
-               selected = by == "page" ? length - 1 : 0;
-           view.dispatch({ effects: setSelectedEffect.of(selected) });
-           return true;
-       };
-   }
-   /**
-   Accept the current completion.
-   */
-   const acceptCompletion = (view) => {
-       let cState = view.state.field(completionState, false);
-       if (view.state.readOnly || !cState || !cState.open || cState.open.selected < 0 ||
-           Date.now() - cState.open.timestamp < view.state.facet(completionConfig).interactionDelay)
-           return false;
-       if (!cState.open.disabled)
-           applyCompletion(view, cState.open.options[cState.open.selected]);
-       return true;
-   };
-   /**
-   Explicitly start autocompletion.
-   */
-   const startCompletion = (view) => {
-       let cState = view.state.field(completionState, false);
-       if (!cState)
-           return false;
-       view.dispatch({ effects: startCompletionEffect.of(true) });
-       return true;
-   };
-   /**
-   Close the currently active completion.
-   */
-   const closeCompletion = (view) => {
-       let cState = view.state.field(completionState, false);
-       if (!cState || !cState.active.some(a => a.state != 0 /* State.Inactive */))
-           return false;
-       view.dispatch({ effects: closeCompletionEffect.of(null) });
-       return true;
-   };
-   class RunningQuery {
-       constructor(active, context) {
-           this.active = active;
-           this.context = context;
-           this.time = Date.now();
-           this.updates = [];
-           // Note that 'undefined' means 'not done yet', whereas 'null' means
-           // 'query returned null'.
-           this.done = undefined;
-       }
-   }
-   const DebounceTime = 50, MaxUpdateCount = 50, MinAbortTime = 1000;
-   const completionPlugin = /*@__PURE__*/ViewPlugin.fromClass(class {
-       constructor(view) {
-           this.view = view;
-           this.debounceUpdate = -1;
-           this.running = [];
-           this.debounceAccept = -1;
-           this.composing = 0 /* CompositionState.None */;
-           for (let active of view.state.field(completionState).active)
-               if (active.state == 1 /* State.Pending */)
-                   this.startQuery(active);
-       }
-       update(update) {
-           let cState = update.state.field(completionState);
-           if (!update.selectionSet && !update.docChanged && update.startState.field(completionState) == cState)
-               return;
-           let doesReset = update.transactions.some(tr => {
-               return (tr.selection || tr.docChanged) && !getUserEvent(tr);
-           });
-           for (let i = 0; i < this.running.length; i++) {
-               let query = this.running[i];
-               if (doesReset ||
-                   query.updates.length + update.transactions.length > MaxUpdateCount && Date.now() - query.time > MinAbortTime) {
-                   for (let handler of query.context.abortListeners) {
-                       try {
-                           handler();
-                       }
-                       catch (e) {
-                           logException(this.view.state, e);
-                       }
-                   }
-                   query.context.abortListeners = null;
-                   this.running.splice(i--, 1);
-               }
-               else {
-                   query.updates.push(...update.transactions);
-               }
-           }
-           if (this.debounceUpdate > -1)
-               clearTimeout(this.debounceUpdate);
-           this.debounceUpdate = cState.active.some(a => a.state == 1 /* State.Pending */ && !this.running.some(q => q.active.source == a.source))
-               ? setTimeout(() => this.startUpdate(), DebounceTime) : -1;
-           if (this.composing != 0 /* CompositionState.None */)
-               for (let tr of update.transactions) {
-                   if (getUserEvent(tr) == "input")
-                       this.composing = 2 /* CompositionState.Changed */;
-                   else if (this.composing == 2 /* CompositionState.Changed */ && tr.selection)
-                       this.composing = 3 /* CompositionState.ChangedAndMoved */;
-               }
-       }
-       startUpdate() {
-           this.debounceUpdate = -1;
-           let { state } = this.view, cState = state.field(completionState);
-           for (let active of cState.active) {
-               if (active.state == 1 /* State.Pending */ && !this.running.some(r => r.active.source == active.source))
-                   this.startQuery(active);
-           }
-       }
-       startQuery(active) {
-           let { state } = this.view, pos = cur(state);
-           let context = new CompletionContext(state, pos, active.explicitPos == pos);
-           let pending = new RunningQuery(active, context);
-           this.running.push(pending);
-           Promise.resolve(active.source(context)).then(result => {
-               if (!pending.context.aborted) {
-                   pending.done = result || null;
-                   this.scheduleAccept();
-               }
-           }, err => {
-               this.view.dispatch({ effects: closeCompletionEffect.of(null) });
-               logException(this.view.state, err);
-           });
-       }
-       scheduleAccept() {
-           if (this.running.every(q => q.done !== undefined))
-               this.accept();
-           else if (this.debounceAccept < 0)
-               this.debounceAccept = setTimeout(() => this.accept(), DebounceTime);
-       }
-       // For each finished query in this.running, try to create a result
-       // or, if appropriate, restart the query.
-       accept() {
-           var _a;
-           if (this.debounceAccept > -1)
-               clearTimeout(this.debounceAccept);
-           this.debounceAccept = -1;
-           let updated = [];
-           let conf = this.view.state.facet(completionConfig);
-           for (let i = 0; i < this.running.length; i++) {
-               let query = this.running[i];
-               if (query.done === undefined)
-                   continue;
-               this.running.splice(i--, 1);
-               if (query.done) {
-                   let active = new ActiveResult(query.active.source, query.active.explicitPos, query.done, query.done.from, (_a = query.done.to) !== null && _a !== void 0 ? _a : cur(query.updates.length ? query.updates[0].startState : this.view.state));
-                   // Replay the transactions that happened since the start of
-                   // the request and see if that preserves the result
-                   for (let tr of query.updates)
-                       active = active.update(tr, conf);
-                   if (active.hasResult()) {
-                       updated.push(active);
-                       continue;
-                   }
-               }
-               let current = this.view.state.field(completionState).active.find(a => a.source == query.active.source);
-               if (current && current.state == 1 /* State.Pending */) {
-                   if (query.done == null) {
-                       // Explicitly failed. Should clear the pending status if it
-                       // hasn't been re-set in the meantime.
-                       let active = new ActiveSource(query.active.source, 0 /* State.Inactive */);
-                       for (let tr of query.updates)
-                           active = active.update(tr, conf);
-                       if (active.state != 1 /* State.Pending */)
-                           updated.push(active);
-                   }
-                   else {
-                       // Cleared by subsequent transactions. Restart.
-                       this.startQuery(current);
-                   }
-               }
-           }
-           if (updated.length)
-               this.view.dispatch({ effects: setActiveEffect.of(updated) });
-       }
-   }, {
-       eventHandlers: {
-           blur(event) {
-               let state = this.view.state.field(completionState, false);
-               if (state && state.tooltip && this.view.state.facet(completionConfig).closeOnBlur) {
-                   let dialog = state.open && getTooltip(this.view, state.open.tooltip);
-                   if (!dialog || !dialog.dom.contains(event.relatedTarget))
-                       this.view.dispatch({ effects: closeCompletionEffect.of(null) });
-               }
-           },
-           compositionstart() {
-               this.composing = 1 /* CompositionState.Started */;
-           },
-           compositionend() {
-               if (this.composing == 3 /* CompositionState.ChangedAndMoved */) {
-                   // Safari fires compositionend events synchronously, possibly
-                   // from inside an update, so dispatch asynchronously to avoid reentrancy
-                   setTimeout(() => this.view.dispatch({ effects: startCompletionEffect.of(false) }), 20);
-               }
-               this.composing = 0 /* CompositionState.None */;
-           }
-       }
    });
 
    const baseTheme = /*@__PURE__*/EditorView.baseTheme({
@@ -25079,7 +25170,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
        "LineComment", "BlockComment",
        "VariableDefinition", "TypeDefinition", "Label",
        "PropertyDefinition", "PropertyName",
-       "PrivatePropertyDefinition", "PrivatePropertyName"
+       "PrivatePropertyDefinition", "PrivatePropertyName",
+       ".", "?."
    ];
    /**
    Completion source that looks up locally defined names in
@@ -26394,6 +26486,108 @@ https://github.com/A99US/CM6-Browser-Wrapper
      }
      return result;
    }
+
+   var pathStr = '<svg viewBox="0 0 1024 1024" width="25" height="25" fill="currentColor"><path d="M607.934444 417.856853c-6.179746-6.1777-12.766768-11.746532-19.554358-16.910135l-0.01228 0.011256c-6.986111-6.719028-16.47216-10.857279-26.930349-10.857279-21.464871 0-38.864146 17.400299-38.864146 38.864146 0 9.497305 3.411703 18.196431 9.071609 24.947182l-0.001023 0c0.001023 0.001023 0.00307 0.00307 0.005117 0.004093 2.718925 3.242857 5.953595 6.03853 9.585309 8.251941 3.664459 3.021823 7.261381 5.997598 10.624988 9.361205l3.203972 3.204995c40.279379 40.229237 28.254507 109.539812-12.024871 149.820214L371.157763 796.383956c-40.278355 40.229237-105.761766 40.229237-146.042167 0l-3.229554-3.231601c-40.281425-40.278355-40.281425-105.809861 0-145.991002l75.93546-75.909877c9.742898-7.733125 15.997346-19.668968 15.997346-33.072233 0-23.312962-18.898419-42.211381-42.211381-42.211381-8.797363 0-16.963347 2.693342-23.725354 7.297197-0.021489-0.045025-0.044002-0.088004-0.066515-0.134053l-0.809435 0.757247c-2.989077 2.148943-5.691629 4.669346-8.025791 7.510044l-78.913281 73.841775c-74.178443 74.229608-74.178443 195.632609 0 269.758863l3.203972 3.202948c74.178443 74.127278 195.529255 74.127278 269.707698 0l171.829484-171.880649c74.076112-74.17435 80.357166-191.184297 6.282077-265.311575L607.934444 417.856853z"></path><path d="M855.61957 165.804257l-3.203972-3.203972c-74.17742-74.178443-195.528232-74.178443-269.706675 0L410.87944 334.479911c-74.178443 74.178443-78.263481 181.296089-4.085038 255.522628l3.152806 3.104711c3.368724 3.367701 6.865361 6.54302 10.434653 9.588379 2.583848 2.885723 5.618974 5.355985 8.992815 7.309476 0.025583 0.020466 0.052189 0.041956 0.077771 0.062422l0.011256-0.010233c5.377474 3.092431 11.608386 4.870938 18.257829 4.870938 20.263509 0 36.68962-16.428158 36.68962-36.68962 0-5.719258-1.309832-11.132548-3.645017-15.95846l0 0c-4.850471-10.891048-13.930267-17.521049-20.210297-23.802102l-3.15383-3.102664c-40.278355-40.278355-24.982998-98.79612 15.295358-139.074476l171.930791-171.830507c40.179095-40.280402 105.685018-40.280402 145.965419 0l3.206018 3.152806c40.279379 40.281425 40.279379 105.838513 0 146.06775l-75.686796 75.737962c-10.296507 7.628748-16.97358 19.865443-16.97358 33.662681 0 23.12365 18.745946 41.87062 41.87062 41.87062 8.048303 0 15.563464-2.275833 21.944801-6.211469 0.048095 0.081864 0.093121 0.157589 0.141216 0.240477l1.173732-1.083681c3.616364-2.421142 6.828522-5.393847 9.529027-8.792247l79.766718-73.603345C929.798013 361.334535 929.798013 239.981676 855.61957 165.804257z"></path></svg>';
+
+   class TextToLinkWidget extends WidgetType {
+     constructor(url) {
+       super();
+       this.url = void 0;
+       this.url = url;
+     }
+
+     eq(other) {
+       return other.url == this.url;
+     }
+
+     toDOM() {
+       const wrapper = document.createElement('a');
+       wrapper.href = this.url;
+       wrapper.target = '__blank';
+       wrapper.innerHTML = pathStr;
+       wrapper.className = 'cm-hyper-link-icon';
+       return wrapper;
+     }
+
+     ignoreEvent() {
+       return false;
+     }
+   }
+
+   function TextToLinkFunc(view) {
+     let validURL = (string) => {
+       let addr;
+       try {
+         addr = new URL(string);
+       } catch (err) {
+         return false;
+       }
+       return ['https:', 'http:'].includes(addr.protocol) && !string.includes(' ');
+     };
+     let buildWidget = (lines, sep, pos) => {
+       let decoItem,
+         result = [],
+         item = lines.split(sep);
+       for (let j = 0; j < item.length; j++) {
+         pos += item[j].length;
+         if (validURL(item[j])) {
+           // console.log(pos + ' : ' + item[j] + ' : is valid url');
+           decoItem = Decoration.widget({
+             widget: new TextToLinkWidget(item[j]),
+             side: 1,
+           });
+           result.push(decoItem.range(pos));
+         }
+         pos++;
+       }
+       return result;
+     };
+     let widgets = [];
+     for (let { from, to } of view.visibleRanges) {
+       let pos;
+       let lastLine = view.state.doc.lineAt(to).number;
+       let currentLine = view.state.doc.lineAt(from);
+       let targetLine = currentLine.number;
+       while (currentLine.number < lastLine) {
+         currentLine = view.state.doc.line(targetLine);
+         pos = currentLine.from;
+         widgets = widgets.concat(buildWidget(currentLine.text, ' ', pos));
+         //widgets = widgets.concat(buildWidget(currentLine.text, "'", pos));
+         targetLine++;
+       }
+     }
+     return Decoration.set(widgets);
+   }
+
+   function TextToLink() {
+     return ViewPlugin.fromClass(
+       class {
+         constructor(view) {
+           this.decorations = void 0;
+           this.decorations = TextToLinkFunc(view);
+         }
+
+         update(update) {
+           if (update.docChanged || update.viewportChanged)
+             this.decorations = TextToLinkFunc(update.view);
+         }
+       },
+       {
+         decorations: (v) => v.decorations
+       }
+     );
+   }
+
+   var hyperLinkStyle = EditorView.baseTheme({
+     '.cm-hyper-link-icon': {
+       display: 'inline-block',
+       verticalAlign: 'middle',
+       marginLeft: '0.4ch',
+     },
+     '.cm-hyper-link-icon svg': {
+       display: 'block',
+     },
+   });
 
    /*
 
@@ -31629,17 +31823,17 @@ https://github.com/A99US/CM6-Browser-Wrapper
 
    */
    /*
-   import {materialLight} from '@ddietr/codemirror-themes'
-   import {materialDark} from '@ddietr/codemirror-themes'
-   import {solarizedLight} from '@ddietr/codemirror-themes'
-   import {solarizedDark} from '@ddietr/codemirror-themes'
-   import {dracula} from '@ddietr/codemirror-themes'
-   import {githubLight} from '@ddietr/codemirror-themes'
-   import {githubDark} from '@ddietr/codemirror-themes'
-   import {aura} from '@ddietr/codemirror-themes'
-   import {tokyoNight} from '@ddietr/codemirror-themes'
-   import {tokyoNightStorm} from '@ddietr/codemirror-themes'
-   import {tokyoNightDay} from '@ddietr/codemirror-themes'
+   import {materialLight} from '@ddietr/codemirror-themes/material-light'
+   import {materialDark} from '@ddietr/codemirror-themes/material-dark'
+   import {solarizedLight} from '@ddietr/codemirror-themes/solarized-light'
+   import {solarizedDark} from '@ddietr/codemirror-themes/solarized-dark'
+   import {dracula} from '@ddietr/codemirror-themes/dracula'
+   import {githubLight} from '@ddietr/codemirror-themes/github-light'
+   import {githubDark} from '@ddietr/codemirror-themes/github-dark'
+   import {aura} from '@ddietr/codemirror-themes/aura'
+   import {tokyoNight} from '@ddietr/codemirror-themes/tokyo-night'
+   import {tokyoNightStorm} from '@ddietr/codemirror-themes/tokyo-night-storm'
+   import {tokyoNightDay} from '@ddietr/codemirror-themes/tokyo-night-day'
    */
    /*
    Not using these, Not updated, breaking change
@@ -31841,6 +32035,15 @@ https://github.com/A99US/CM6-Browser-Wrapper
            } else {
                closeSearchPanel(EditorVar[parent]);
            }
+       } else if (CommandId[1] == 'gotoline') {
+           // GoToLine Button
+           let optline = ThisButton.prop("lineval");
+           if(!optline || optline == "")
+               optline = prompt('Choose Line . . . ');
+           if(optline){
+               gotoline(parent, optline);
+           }
+           ThisButton.prop("lineval","");
        } else if (CommandId[1] == 'linewrap') {
            // LineWrap Button
            EditorVar[parent].dispatch({
@@ -31925,6 +32128,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
            if (setting['control']['panel'])
                buildcontrol(parent, true);
        }
+       if (setting['defaultline'])
+           gotoline(parent, setting['defaultline']);
        // Reset History Button
        buttonstatus(parent);
    }
@@ -31944,6 +32149,8 @@ https://github.com/A99US/CM6-Browser-Wrapper
            EditorVar[parent].setState(StateVar);
            if (setting['control'] && setting['control']['panel'])
                buildcontrol(parent, true);
+           if (setting['defaultline'])
+               gotoline(parent, setting['defaultline']);
            buttonstatus(parent);
            return;
        }
@@ -31961,6 +32168,20 @@ https://github.com/A99US/CM6-Browser-Wrapper
                to: EditorVar[parent].state.doc.length,
                insert: (window[window.EditorSetting[parent]['data']] || '')
            }
+       });
+   }
+
+   /*
+   Function to go to certain line
+   */
+   function gotoline(parent, line) {
+       let from, max = EditorVar[parent].state.doc.lines;
+       if(line < 1) from = 0;
+       else if(line > max) from = EditorVar[parent].state.doc.line(max).from;
+       else from = EditorVar[parent].state.doc.line(line).from;
+       EditorVar[parent].dispatch({
+           selection: { anchor: from },
+           scrollIntoView: true
        });
    }
 
@@ -32007,6 +32228,10 @@ https://github.com/A99US/CM6-Browser-Wrapper
                (setting['linewrap']) ? EditorView.lineWrapping : []
            )
        ]);
+       if (setting['extension']){
+           if (setting['extension'] == "cm6-texttolink")
+               customExt = customExt.concat([TextToLink(EditorView), hyperLinkStyle]);
+       }
        if (typeof setting['lineNumbers'] === 'undefined' || setting['lineNumbers'] == true)
            customExt.push(lineNumbers());
        if (setting['css'])
@@ -32121,6 +32346,9 @@ https://github.com/A99US/CM6-Browser-Wrapper
                    (setting['readonly']) ? 'On' : 'Off'
                ));
            };
+           controlopt['gotoline'] = () => {
+               return button('-gotoline-', 'GoToLine');
+           };
            controlopt['lang'] = () => {
                str = "";
                str += "<select id='" + EditorPrefix + '-setlang-' + parent + "'>";
@@ -32151,15 +32379,21 @@ https://github.com/A99US/CM6-Browser-Wrapper
 
        // Add Control To Panel
        if (panelonly == true) {
-           let topposition = (setting['control']['panel'] == 'top') ? true : false;
-
+           let topposition = (setting['control']['panel'] == 'top') ? true : false,
+               panelshow, paneltext;
+           if(setting['control']['panelshow'] == false){
+               panelshow = "hidden='true'"; paneltext = "Show";
+           }else {
+               panelshow = ''; paneltext = "Hide";
+           }
            function createpaneldiv() {
                let dom = document.createElement("div");
                dom.id = 'panelcontrol' + parent;
                dom.innerHTML =
-                   button('-spancontrolpanel-', 'Hide') +
+                   button('-spancontrolpanel-', paneltext) +
                    "<span id='spancontrolpanel" + parent + "' style='" +
-                   (setting['control']['panelstyle'] || "line-height: 175%;") + "'>" +
+                   (setting['control']['panelstyle'] || "line-height: 175%;") + "' "+
+                   panelshow +" >" +
                    control(setting['control']['panelitem']) +
                    "</span>";
                return { top: topposition, dom };
